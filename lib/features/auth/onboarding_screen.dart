@@ -19,7 +19,7 @@ class OnboardingScreen extends StatelessWidget {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                   Container(
+                  Container(
                     width: 280,
                     height: 280,
                     decoration: BoxDecoration(
@@ -61,24 +61,25 @@ class OnboardingScreen extends StatelessWidget {
                       'Find A Perfect Job Match',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                        color: Colors.white,
-                        fontSize: 28,
-                      ),
+                            color: Colors.white,
+                            fontSize: 28,
+                          ),
                     ),
                     SizedBox(height: 16),
                     Text(
                       'Finding Your Dream Job Is Now Much Easier And Faster Like Never Before.',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
-                      ),
+                            color: Colors.white.withOpacity(0.7),
+                          ),
                     ),
                     SizedBox(height: 32),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(

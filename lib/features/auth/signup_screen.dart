@@ -41,7 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 40),
-              
+
               // Full Name Field
               _buildLabel('Full Name'),
               _buildTextField(
@@ -50,9 +50,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 prefixIcon: Icons.person_outline,
                 keyboardType: TextInputType.name,
               ),
-              
+
               SizedBox(height: 20),
-              
+
               // Email Field
               _buildLabel('Email Address'),
               _buildTextField(
@@ -61,9 +61,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icons.mail_outline,
               ),
-              
+
               SizedBox(height: 20),
-              
+
               // Password Field
               _buildLabel('Password'),
               _buildTextField(
@@ -73,7 +73,9 @@ class _SignupScreenState extends State<SignupScreen> {
                 prefixIcon: Icons.lock_outline,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    _isPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: AppTheme.textSecondary,
                   ),
                   onPressed: () {
@@ -83,18 +85,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                 ),
               ),
-              
+
               SizedBox(height: 40),
-              
+
               ElevatedButton(
                 onPressed: () {
                   // Sign up logic
                 },
                 child: Text('Create Account'),
               ),
-              
+
               SizedBox(height: 24),
-              
+
               // Terms and Conditions
               Center(
                 child: Padding(
@@ -102,17 +104,24 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontSize: 12),
                       children: [
                         TextSpan(text: 'By signing up, you agree to our '),
                         TextSpan(
                           text: 'Terms of Service',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primary),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary),
                         ),
                         TextSpan(text: ' and '),
                         TextSpan(
                           text: 'Privacy Policy',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primary),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.primary),
                         ),
                       ],
                     ),
@@ -121,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
 
               SizedBox(height: 32),
-              
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

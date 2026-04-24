@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 // ─── PANDA SKETCH LOGO ─────────────────────────────────────────
@@ -9,7 +10,8 @@ class PandaLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: size, height: size,
+      width: size,
+      height: size,
       padding: EdgeInsets.all(size * 0.15),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -42,15 +44,11 @@ class AppButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: fullWidth ? double.infinity : null,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
         decoration: BoxDecoration(
-          color: primary ? AppColors.black : AppColors.white,
-          borderRadius: BorderRadius.circular(100),
-          border: Border.all(color: AppColors.black, width: 2),
-          boxShadow: [
-            if (primary)
-              const BoxShadow(color: Color(0x33000000), offset: Offset(0, 4), blurRadius: 0),
-          ],
+          color: primary ? const Color(0xFF111111) : const Color(0xFFEDEAE6),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.black, width: 1.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -58,16 +56,13 @@ class AppButton extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(
-                color: primary ? AppColors.white : AppColors.black,
+              style: GoogleFonts.outfit(
+                color: primary ? const Color(0xFFEDEAE6) : Colors.black,
                 fontWeight: FontWeight.w800,
-                fontSize: 16,
+                fontSize: 14,
+                letterSpacing: 1.2,
               ),
             ),
-            if (primary) ...[
-              const SizedBox(width: 8),
-              Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.white),
-            ],
           ],
         ),
       ),
@@ -93,9 +88,9 @@ class AppCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: const Color(0xFFEDEAE6),
         borderRadius: BorderRadius.circular(24),
-        border: outlined ? Border.all(color: AppColors.black, width: 2) : null,
+        border: outlined ? Border.all(color: AppColors.black, width: 1.5) : null,
       ),
       child: child,
     );
@@ -118,18 +113,21 @@ class AppInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: const Color(0xFFF9F8F6),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.black, width: 2),
+        border: Border.all(color: Colors.black.withOpacity(0.1), width: 1),
       ),
       child: TextField(
         obscureText: obscure,
+        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600),
         decoration: InputDecoration(
           hintText: placeholder,
-          hintStyle: AppTextStyles.bodyMedium,
-          icon: icon != null ? Icon(icon, color: AppColors.black, size: 20) : null,
+          hintStyle: GoogleFonts.inter(color: Colors.black.withOpacity(0.3), fontSize: 14),
+          icon: icon != null
+              ? Icon(icon, color: Colors.black, size: 20)
+              : null,
           border: InputBorder.none,
         ),
       ),
@@ -141,25 +139,26 @@ class AppInput extends StatelessWidget {
 class AppBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  const AppBottomNav({super.key, required this.selectedIndex, required this.onTap});
+  const AppBottomNav(
+      {super.key, required this.selectedIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 90,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.black, width: 2)),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111111),
+        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _navItem(0, Icons.home_filled),
-          _navItem(1, Icons.search_rounded),
-          _navItem(2, Icons.add_box_outlined),
-          _navItem(3, Icons.wallet_rounded),
-          _navItem(4, Icons.person_rounded),
+          _navItem(1, Icons.explore_outlined),
+          _navActionItem(2, Icons.add_rounded),
+          _navItem(3, Icons.account_balance_wallet_outlined),
+          _navItem(4, Icons.person_outline_rounded),
         ],
       ),
     );
@@ -171,11 +170,25 @@ class AppBottomNav extends StatelessWidget {
       onTap: () => onTap(i),
       child: Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: active ? AppColors.black : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+        child: Icon(
+          icon,
+          size: 26,
+          color: active ? const Color(0xFFEDEAE6) : const Color(0xFFEDEAE6).withOpacity(0.3),
         ),
-        child: Icon(icon, color: active ? AppColors.white : AppColors.black),
+      ),
+    );
+  }
+
+  Widget _navActionItem(int i, IconData icon) {
+    return GestureDetector(
+      onTap: () => onTap(i),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: const BoxDecoration(
+          color: Color(0xFFEDEAE6),
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(Icons.add_rounded, color: Colors.black, size: 28),
       ),
     );
   }
@@ -204,38 +217,62 @@ class JobListCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.black, width: 2),
+          color: const Color(0xFF1D1D1D),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
         ),
         child: Row(
           children: [
             Container(
-              width: 50, height: 50,
+              width: 54,
+              height: 54,
               decoration: BoxDecoration(
-                color: AppColors.grayBg,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.black, width: 1.5),
+                color: Colors.white.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+              child: Center(
+                  child: Text(emoji, style: const TextStyle(fontSize: 26))),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.headingMedium),
-                  Text(college, style: AppTextStyles.bodyMedium),
+                  Text(
+                    title,
+                    style: GoogleFonts.outfit(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    college,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: const Color(0xFFEDEAE6).withOpacity(0.4),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('₹$budget', style: AppTextStyles.headingMedium),
-                const Icon(Icons.favorite_border, size: 20),
+                Text(
+                  '₹$budget',
+                  style: GoogleFonts.outfit(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFFEDEAE6),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Icon(Icons.favorite_border, size: 18, color: Colors.white.withOpacity(0.3)),
               ],
             ),
           ],
@@ -245,6 +282,7 @@ class JobListCard extends StatelessWidget {
   }
 }
 
+
 // ─── PRESSABLE ─────────────────────────────────────────────────
 class Pressable extends StatefulWidget {
   final Widget child;
@@ -253,22 +291,33 @@ class Pressable extends StatefulWidget {
   @override
   State<Pressable> createState() => _PressableState();
 }
-class _PressableState extends State<Pressable> with SingleTickerProviderStateMixin {
+
+class _PressableState extends State<Pressable>
+    with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _opacity;
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 80));
+    _ctrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 80));
     _opacity = Tween(begin: 1.0, end: 0.75).animate(_ctrl);
   }
+
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapDown: (_) => _ctrl.forward(),
-      onTapUp: (_) { _ctrl.reverse(); widget.onTap?.call(); },
+      onTapUp: (_) {
+        _ctrl.reverse();
+        widget.onTap?.call();
+      },
       onTapCancel: () => _ctrl.reverse(),
       child: AnimatedBuilder(
         animation: _opacity,

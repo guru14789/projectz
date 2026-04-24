@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../widgets/panda_loader.dart';
 
@@ -14,36 +15,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Slightly longer delay for the beautiful animation
     Future.delayed(const Duration(seconds: 4), widget.onDone);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: const Color(0xFFEDEAE6), // Ivory
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const PandaLoader(size: 140),
             const SizedBox(height: 60),
-            Image.asset(
-              'assets/images/logo.png',
-              width: 200,
-              errorBuilder: (ctx, _, __) => Text(
-                'WORKPANDA',
-                style: AppTextStyles.displayLarge.copyWith(letterSpacing: 2),
+            Text(
+              'WORKPANDA',
+              style: GoogleFonts.outfit(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
+                letterSpacing: 8,
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'GIGS FOR STUDENTS',
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
+            Text(
+              'STUDENT GIGS REDEFINED',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w700,
                 fontSize: 10,
-                color: AppColors.black,
-                letterSpacing: 4,
+                color: Colors.black.withOpacity(0.4),
+                letterSpacing: 2,
               ),
             ),
           ],

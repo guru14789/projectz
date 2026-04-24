@@ -10,16 +10,27 @@ class PandaLoader extends StatefulWidget {
   State<PandaLoader> createState() => _PandaLoaderState();
 }
 
-class _PandaLoaderState extends State<PandaLoader> with SingleTickerProviderStateMixin {
+class _PandaLoaderState extends State<PandaLoader>
+    with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   late AnimationController _controller;
 
   final List<CardContent> _contents = [
     CardContent(icon: Icons.face, label: "Panda Blink", color: Colors.black),
-    CardContent(icon: Icons.sentiment_satisfied_alt, label: "Panda Smile", color: Color(0xFF4CAF50)),
-    CardContent(icon: Icons.timer_outlined, label: "Tasks", color: Colors.black),
-    CardContent(icon: Icons.checklist_rounded, label: "Checklist", color: Color(0xFF4CAF50)),
-    CardContent(icon: Icons.dashboard_customize_outlined, label: "UI Hints", color: Colors.black),
+    CardContent(
+        icon: Icons.sentiment_satisfied_alt,
+        label: "Panda Smile",
+        color: Color(0xFF4CAF50)),
+    CardContent(
+        icon: Icons.timer_outlined, label: "Tasks", color: Colors.black),
+    CardContent(
+        icon: Icons.checklist_rounded,
+        label: "Checklist",
+        color: Color(0xFF4CAF50)),
+    CardContent(
+        icon: Icons.dashboard_customize_outlined,
+        label: "UI Hints",
+        color: Colors.black),
   ];
 
   @override
@@ -29,9 +40,10 @@ class _PandaLoaderState extends State<PandaLoader> with SingleTickerProviderStat
       vsync: this,
       duration: const Duration(milliseconds: 2500),
     )..repeat();
-    
+
     _controller.addListener(() {
-      final newIndex = (_controller.value * _contents.length).floor() % _contents.length;
+      final newIndex =
+          (_controller.value * _contents.length).floor() % _contents.length;
       if (newIndex != _currentIndex) {
         setState(() {
           _currentIndex = newIndex;
@@ -61,15 +73,23 @@ class _PandaLoaderState extends State<PandaLoader> with SingleTickerProviderStat
                 child: _buildCard(null, i),
               ),
             ),
-          
+
           // Flipping Card
           _buildFlippingCard(),
         ],
       )
-      .animate(onPlay: (controller) => controller.repeat())
-      .moveY(begin: 0, end: -10, duration: 1200.ms, curve: Curves.easeInOutSine)
-      .then()
-      .moveY(begin: -10, end: 0, duration: 1200.ms, curve: Curves.easeInOutSine),
+          .animate(onPlay: (controller) => controller.repeat())
+          .moveY(
+              begin: 0,
+              end: -10,
+              duration: 1200.ms,
+              curve: Curves.easeInOutSine)
+          .then()
+          .moveY(
+              begin: -10,
+              end: 0,
+              duration: 1200.ms,
+              curve: Curves.easeInOutSine),
     );
   }
 
@@ -79,9 +99,10 @@ class _PandaLoaderState extends State<PandaLoader> with SingleTickerProviderStat
       builder: (context, child) {
         // Calculate local progress within this card's flip cycle
         final double progress = (_controller.value * _contents.length) % 1.0;
-        final bool isFlipping = progress > 0.7; // Start flipping at the end of the step
-        
-        final double flipAngle = isFlipping 
+        final bool isFlipping =
+            progress > 0.7; // Start flipping at the end of the step
+
+        final double flipAngle = isFlipping
             ? (progress - 0.7) / 0.3 * math.pi // Flip 180 degrees
             : 0.0;
 
@@ -112,12 +133,13 @@ class _PandaLoaderState extends State<PandaLoader> with SingleTickerProviderStat
           ),
         ],
       ),
-      child: content == null 
-          ? null 
+      child: content == null
+          ? null
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(content.icon, size: widget.size * 0.4, color: content.color),
+                Icon(content.icon,
+                    size: widget.size * 0.4, color: content.color),
                 const SizedBox(height: 8),
                 Container(
                   width: widget.size * 0.4,

@@ -1,155 +1,259 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../widgets/components.dart';
 import '../theme/app_theme.dart';
 
 class HomeScreen extends StatelessWidget {
   final VoidCallback onJobTap;
   final VoidCallback onPostTap;
-  const HomeScreen({super.key, required this.onJobTap, required this.onPostTap});
+  const HomeScreen(
+      {super.key, required this.onJobTap, required this.onPostTap});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.grayBg,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header & Search
-              Row(
+      backgroundColor: const Color(0xFF111111), // Midnight Black
+      body: CustomScrollView(
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      border: Border.all(color: AppColors.black, width: 2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.menu, size: 24),
-                  ),
-                  const SizedBox(width: 16),
-                  const Expanded(
-                    child: AppInput(
-                      placeholder: 'Discover student gigs...',
-                      icon: Icons.search,
-                    ),
-                  ),
+                  const SizedBox(height: 20),
+                  _buildSearchSection(),
+                  const SizedBox(height: 40),
+                  _buildSectionHeader('FEATURED GIGS'),
+                  const SizedBox(height: 20),
+                  _buildFeaturedCarousel(),
+                  const SizedBox(height: 40),
+                  _buildSectionHeader('CATEGORIES'),
+                  const SizedBox(height: 20),
+                  _buildCategoryGrid(),
+                  const SizedBox(height: 40),
+                  _buildSectionHeader('LIVE JOB FEED'),
+                  const SizedBox(height: 16),
                 ],
               ),
-              
-              const SizedBox(height: 32),
-              
-              // Top Highlight Card
-              AppCard(
-                padding: 0,
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        Container(
-                          height: 160,
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            color: AppColors.grayBg,
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
-                          ),
-                          child: const Center(child: Text('🐾', style: TextStyle(fontSize: 80))),
-                        ),
-                        Positioned(
-                          right: 16, bottom: 16,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(color: AppColors.black, shape: BoxShape.circle),
-                            child: const Icon(Icons.favorite, color: AppColors.white, size: 20),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Academic gig "Note Taking"', style: AppTextStyles.headingMedium),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const CircleAvatar(radius: 12, backgroundColor: AppColors.black, child: Text('S', style: TextStyle(color: Colors.white, fontSize: 10))),
-                              const SizedBox(width: 8),
-                              Text('IIT Madras · 4.9 ratings', style: AppTextStyles.bodyMedium),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Categories / Facilities
-              Text('Categories', style: AppTextStyles.headingMedium),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _categoryItem('Writing', Icons.edit_note),
-                  _categoryItem('Delivery', Icons.delivery_dining),
-                  _categoryItem('Coding', Icons.code),
-                  _categoryItem('Design', Icons.brush),
-                ],
-              ),
-              
-              const SizedBox(height: 32),
-              
-              Text('Recent Gigs', style: AppTextStyles.headingMedium),
-              const SizedBox(height: 16),
-              
-              // List of Jobs
-              JobListCard(
-                title: 'Library Assistance',
-                budget: '400',
-                emoji: '📚',
-                college: 'Anna University',
-                onTap: onJobTap,
-              ),
-              JobListCard(
-                title: 'Data Entry Helper',
-                budget: '1200',
-                emoji: '💻',
-                college: 'MU Campus',
-                onTap: onJobTap,
-              ),
-            ],
+            ),
           ),
-        ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildJobCard('Library Curator', '₹450/hr', '📚', 'Anna University'),
+                _buildJobCard('Panda Researcher', '₹1.2k', '🐼', 'MU Campus'),
+                _buildJobCard('Draft Assistant', '₹800', '🖋️', 'IIT Madras'),
+                _buildJobCard('Lab Assistant', '₹500', '🧪', 'Sathyabama'),
+                const SizedBox(height: 100),
+              ]),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: onPostTap,
-        backgroundColor: AppColors.black,
-        child: const Icon(Icons.add, color: AppColors.white),
+        backgroundColor: const Color(0xFFEDEAE6), // Ivory
+        child: const Icon(Icons.add_rounded, color: Colors.black, size: 30),
+      ).animate().scale(delay: 1.seconds, duration: 500.ms, curve: Curves.easeOutBack),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      backgroundColor: const Color(0xFF111111),
+      floating: true,
+      pinned: true,
+      expandedHeight: 80,
+      centerTitle: false,
+      title: Text(
+        'WORKPANDA',
+        style: GoogleFonts.outfit(
+          fontSize: 16,
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFEDEAE6),
+          letterSpacing: 4,
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 20.0),
+          child: CircleAvatar(
+            radius: 20,
+            backgroundColor: const Color(0xFFEDEAE6),
+            child: const Text('SK', style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1D1D1D),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: TextField(
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          hintText: 'What are you looking for?',
+          hintStyle: GoogleFonts.inter(color: Colors.white.withOpacity(0.4), fontSize: 14),
+          icon: const Icon(Icons.search, color: Colors.white, size: 20),
+          border: InputBorder.none,
+        ),
+      ),
+    ).animate().fadeIn(duration: 600.ms).moveX(begin: -20, end: 0);
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.outfit(
+        fontSize: 12,
+        fontWeight: FontWeight.w900,
+        color: const Color(0xFFEDEAE6).withOpacity(0.5),
+        letterSpacing: 2,
       ),
     );
   }
 
-  Widget _categoryItem(String label, IconData icon) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            border: Border.all(color: AppColors.black, width: 2),
-            borderRadius: BorderRadius.circular(16),
+  Widget _buildFeaturedCarousel() {
+    return SizedBox(
+      height: 220,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        clipBehavior: Clip.none,
+        itemCount: 3,
+        separatorBuilder: (c, i) => const SizedBox(width: 16),
+        itemBuilder: (c, i) => _buildFeaturedCard(i),
+      ),
+    );
+  }
+
+  Widget _buildFeaturedCard(int index) {
+    final titles = ['GRAPHIC DESIGN', 'NOTE TAKING', 'DATA ENTRY'];
+    final emojies = ['🎨', '📝', '💻'];
+    final colors = [const Color(0xFFEDEAE6), const Color(0xFFD4E157), const Color(0xFF64B5F6)];
+
+    return Container(
+      width: 280,
+      decoration: BoxDecoration(
+        color: colors[index % colors.length],
+        borderRadius: BorderRadius.circular(32),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(emojies[index % emojies.length], style: const TextStyle(fontSize: 32)),
+              const Icon(Icons.arrow_outward_rounded, color: Colors.black),
+            ],
           ),
-          child: Icon(icon, size: 28),
-        ),
-        const SizedBox(height: 8),
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12)),
+          const Spacer(),
+          Text(
+            titles[index % titles.length],
+            style: GoogleFonts.outfit(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              color: Colors.black,
+              height: 1.1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'High payout student gig available at Anna University.',
+            style: GoogleFonts.inter(fontSize: 12, color: Colors.black.withOpacity(0.6)),
+          ),
+        ],
+      ),
+    ).animate().scale(delay: (index * 100).ms, duration: 400.ms);
+  }
+
+  Widget _buildCategoryGrid() {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: [
+        _categoryChip('Academic', Icons.school_outlined),
+        _categoryChip('Delivery', Icons.delivery_dining_outlined),
+        _categoryChip('Drafting', Icons.edit_note_outlined),
+        _categoryChip('Tech', Icons.code_off_outlined),
+        _categoryChip('Events', Icons.event_available_outlined),
       ],
     );
+  }
+
+  Widget _categoryChip(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1D1D1D),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 18, color: const Color(0xFFEDEAE6)),
+          const SizedBox(width: 8),
+          Text(label, style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFEDEAE6), fontWeight: FontWeight.w600)),
+        ],
+      ),
+    ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.2, end: 0);
+  }
+
+  Widget _buildJobCard(String title, String budget, String emoji, String college) {
+    return GestureDetector(
+      onTap: onJobTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1D1D1D),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.white.withOpacity(0.05)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: const Color(0xFF2D2D2D),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
+                  Text(college, style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withOpacity(0.5))),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(budget, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w900, color: const Color(0xFFEDEAE6))),
+                const SizedBox(height: 4),
+                const Icon(Icons.chevron_right, color: Colors.white30, size: 18),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn().moveY(begin: 20, end: 0);
   }
 }

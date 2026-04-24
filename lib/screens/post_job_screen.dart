@@ -5,7 +5,8 @@ import '../theme/app_theme.dart';
 class PostJobScreen extends StatelessWidget {
   final VoidCallback onBack;
   final VoidCallback onPosted;
-  const PostJobScreen({super.key, required this.onBack, required this.onPosted});
+  const PostJobScreen(
+      {super.key, required this.onBack, required this.onPosted});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +20,17 @@ class PostJobScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('What do you need help with?', style: AppTextStyles.headingLarge),
+            Text('What do you need help with?',
+                style: AppTextStyles.headingLarge),
             const SizedBox(height: 32),
-            const AppInput(placeholder: 'Gig title (e.g. Logo Design)', icon: Icons.title),
+            const AppInput(
+                placeholder: 'Gig title (e.g. Logo Design)', icon: Icons.title),
             const SizedBox(height: 16),
-            const AppInput(placeholder: 'Budget (₹)', icon: Icons.currency_rupee),
+            const AppInput(
+                placeholder: 'Budget (₹)', icon: Icons.currency_rupee),
             const SizedBox(height: 16),
-            const AppInput(placeholder: 'Category', icon: Icons.category_outlined),
+            const AppInput(
+                placeholder: 'Category', icon: Icons.category_outlined),
             const SizedBox(height: 16),
             const AppCard(
               padding: 0,
@@ -51,7 +56,8 @@ class PostJobScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 60),
-            AppButton(label: 'Post to Campus', fullWidth: true, onTap: onPosted),
+            AppButton(
+                label: 'Post to Campus', fullWidth: true, onTap: onPosted),
           ],
         ),
       ),

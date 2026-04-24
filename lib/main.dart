@@ -9,14 +9,17 @@ import 'screens/verification_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/job_detail_screen.dart';
 import 'screens/post_job_screen.dart';
+import 'screens/discover_screen.dart';
+import 'screens/wallet_screen.dart';
+import 'screens/profile_screen.dart';
 import 'screens/other_screens.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: AppColors.black,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: const Color(0xFF111111),
     systemNavigationBarIconBrightness: Brightness.light,
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -54,7 +57,8 @@ class _AppShellState extends State<AppShell> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 400),
-      transitionBuilder: (child, anim) => FadeTransition(opacity: anim, child: child),
+      transitionBuilder: (child, anim) =>
+          FadeTransition(opacity: anim, child: child),
       child: _buildFlow(),
     );
   }
@@ -62,13 +66,19 @@ class _AppShellState extends State<AppShell> {
   Widget _buildFlow() {
     switch (_flow) {
       case AppFlow.splash:
-        return SplashScreen(key: ValueKey('splash'), onDone: () => _setFlow(AppFlow.onboarding));
+        return SplashScreen(
+            key: ValueKey('splash'),
+            onDone: () => _setFlow(AppFlow.onboarding));
       case AppFlow.onboarding:
-        return OnboardingScreen(key: ValueKey('onboard'), onDone: () => _setFlow(AppFlow.auth));
+        return OnboardingScreen(
+            key: ValueKey('onboard'), onDone: () => _setFlow(AppFlow.auth));
       case AppFlow.auth:
-        return AuthScreen(key: ValueKey('auth'), onDone: () => _setFlow(AppFlow.verification));
+        return AuthScreen(
+            key: ValueKey('auth'),
+            onDone: () => _setFlow(AppFlow.verification));
       case AppFlow.verification:
-        return VerificationScreen(key: ValueKey('verify'), onDone: () => _setFlow(AppFlow.main));
+        return VerificationScreen(
+            key: ValueKey('verify'), onDone: () => _setFlow(AppFlow.main));
       case AppFlow.main:
         return MainNav(key: ValueKey('main'));
     }
@@ -94,10 +104,14 @@ class _MainNavState extends State<MainNav> {
 
   int get _navIndex {
     switch (_tab) {
-      case MainScreen.home: return 0;
-      case MainScreen.discover: return 1;
-      case MainScreen.wallet: return 3;
-      case MainScreen.profile: return 4;
+      case MainScreen.home:
+        return 0;
+      case MainScreen.discover:
+        return 1;
+      case MainScreen.wallet:
+        return 3;
+      case MainScreen.profile:
+        return 4;
     }
   }
 
@@ -106,7 +120,13 @@ class _MainNavState extends State<MainNav> {
       setState(() => _showPostJob = true);
       return;
     }
-    final screens = [MainScreen.home, MainScreen.discover, MainScreen.home, MainScreen.wallet, MainScreen.profile];
+    final screens = [
+      MainScreen.home,
+      MainScreen.discover,
+      MainScreen.home,
+      MainScreen.wallet,
+      MainScreen.profile
+    ];
     setState(() {
       _tab = screens[i];
       _showJobDetail = false;
@@ -123,20 +143,26 @@ class _MainNavState extends State<MainNav> {
     if (_showPostJob) {
       return PostJobScreen(
         onBack: () => setState(() => _showPostJob = false),
-        onPosted: () => setState(() { _showPostJob = false; _tab = MainScreen.home; }),
+        onPosted: () => setState(() {
+          _showPostJob = false;
+          _tab = MainScreen.home;
+        }),
       );
     }
     if (_showJobDetail) {
-      return JobDetailScreen(onBack: () => setState(() => _showJobDetail = false));
+      return JobDetailScreen(
+          onBack: () => setState(() => _showJobDetail = false));
     }
     if (_showChat) {
       return ChatScreen(onBack: () => setState(() => _showChat = false));
     }
     if (_showSettings) {
-      return SettingsScreen(onBack: () => setState(() => _showSettings = false));
+      return SettingsScreen(
+          onBack: () => setState(() => _showSettings = false));
     }
     if (_showApplications) {
-      return ApplicationsScreen(onBack: () => setState(() => _showApplications = false));
+      return ApplicationsScreen(
+          onBack: () => setState(() => _showApplications = false));
     }
 
     // Main nav

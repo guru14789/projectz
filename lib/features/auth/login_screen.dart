@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 40),
-              
+
               // Email Field
               _buildLabel('Email Address'),
               _buildTextField(
@@ -43,9 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icons.mail_outline,
               ),
-              
+
               SizedBox(height: 24),
-              
+
               // Password Field
               _buildLabel('Password'),
               _buildTextField(
@@ -55,7 +55,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 prefixIcon: Icons.lock_outline,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    _isPasswordVisible
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: AppTheme.textSecondary,
                   ),
                   onPressed: () {
@@ -65,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
               ),
-              
+
               SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerRight,
@@ -74,18 +76,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text('Forgot Password?'),
                 ),
               ),
-              
+
               SizedBox(height: 32),
-              
+
               ElevatedButton(
                 onPressed: () {
                   // Authentication logic
                 },
                 child: Text('Sign In'),
               ),
-              
+
               SizedBox(height: 24),
-              
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
