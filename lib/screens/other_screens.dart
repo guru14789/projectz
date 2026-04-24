@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../theme/app_theme.dart';
 import '../widgets/components.dart';
 
@@ -10,20 +11,33 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        leading:
-            IconButton(icon: const Icon(Icons.arrow_back), onPressed: onBack),
-        title: const Text('CHAT'),
-        elevation: 0,
-        backgroundColor: const Color(0xFF111111),
+        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: onBack),
+        title: Text('MESSAGES', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
       ),
-      body: const Center(
-          child: Text('Messages Coming Soon', style: TextStyle(color: Colors.white))),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const PandaLogo(size: 80),
+            const SizedBox(height: 32),
+            Text(
+              'INBOX EMPTY',
+              style: AppTextStyles.labelBold.copyWith(fontSize: 12),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Secure encrypted messages\nwill appear here.',
+              textAlign: TextAlign.center,
+              style: AppTextStyles.bodyMedium,
+            ),
+          ],
+        ),
+      ).animate().fadeIn(),
     );
   }
 }
-
 
 // ─── SETTINGS SCREEN ────────────────────────────────────────────
 class SettingsScreen extends StatelessWidget {
@@ -33,42 +47,53 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-          title: const Text('Settings'),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back), onPressed: onBack)),
+        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: onBack),
+        title: Text('SETTINGS', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(32),
         children: [
-          _settingItem('Account Settings'),
-          _settingItem('Privacy & Security'),
-          _settingItem('Payment Methods'),
-          _settingItem('Help & Support'),
-          const SizedBox(height: 40),
+          _settingItem('Account Information', Icons.person_outline_rounded),
+          _settingItem('Privacy & Bio', Icons.shield_outlined),
+          _settingItem('Financial Accounts', Icons.account_balance_wallet_outlined),
+          _settingItem('Notification Hub', Icons.notifications_none_rounded),
+          const SizedBox(height: 60),
           AppButton(
-              label: 'Log Out', primary: false, fullWidth: true, onTap: () {}),
+            label: 'RELEASE SESSION', 
+            primary: false, 
+            fullWidth: true, 
+            onTap: () {}
+          ),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  Widget _settingItem(String label) => Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(20),
+  Widget _settingItem(String label, IconData icon) => Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.black, width: 2),
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.offWhite,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.silver),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-            const Icon(Icons.chevron_right),
+            Icon(icon, size: 20, color: AppColors.black),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Text(
+                label.toUpperCase(), 
+                style: AppTextStyles.labelBold.copyWith(fontSize: 10, letterSpacing: 1.5)
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, size: 18, color: AppColors.slate),
           ],
         ),
-      );
+      ).animate().fadeIn().slideX(begin: 0.1, end: 0);
 }
 
 // ─── APPLICATIONS SCREEN ────────────────────────────────────────
@@ -79,11 +104,24 @@ class ApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-          title: const Text('Applications'),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back), onPressed: onBack)),
-      body: const Center(child: Text('No applications yet.')),
+        leading: IconButton(icon: const Icon(Icons.arrow_back_ios_new, size: 20), onPressed: onBack),
+        title: Text('APPLICATIONS', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.history_edu_rounded, size: 64, color: AppColors.silver),
+            const SizedBox(height: 24),
+            Text(
+              'NO ACTIVE APPLICATIONS',
+              style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

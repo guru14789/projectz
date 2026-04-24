@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/app_theme.dart';
+import '../widgets/components.dart';
 
 class WalletScreen extends StatelessWidget {
   const WalletScreen({super.key});
@@ -8,65 +10,43 @@ class WalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF111111),
-        elevation: 0,
-        title: Text(
-          'WALLET',
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            color: const Color(0xFFEDEAE6),
-            letterSpacing: 4,
+        title: Text('WALLET', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline_rounded, color: AppColors.black),
+            onPressed: () {},
           ),
-        ),
+          const SizedBox(width: 8),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
-            Text(
-              'TOTAL BALANCE',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFFEDEAE6).withOpacity(0.5),
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              '₹5,420.00',
-              style: GoogleFonts.outfit(
-                fontSize: 48,
-                fontWeight: FontWeight.w900,
-                color: const Color(0xFFEDEAE6),
-                letterSpacing: -1,
-              ),
-            ).animate().fadeIn().slideX(begin: -0.1, end: 0),
-            const SizedBox(height: 48),
+            const SizedBox(height: 24),
+            _buildBalanceCard(),
+            const SizedBox(height: 56),
             Text(
               'RECENT TRANSACTIONS',
-              style: GoogleFonts.outfit(
-                fontSize: 12,
-                fontWeight: FontWeight.w900,
-                color: const Color(0xFFEDEAE6).withOpacity(0.5),
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.separated(
-                itemCount: 4,
-                separatorBuilder: (c, i) => const Divider(color: Colors.white12, height: 1),
-                itemBuilder: (c, i) => _buildTransactionItem(i),
-              ),
+              style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
             ),
             const SizedBox(height: 24),
-            _buildWithdrawButton(),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 4,
+              separatorBuilder: (c, i) => const Divider(height: 1, color: AppColors.silver),
+              itemBuilder: (c, i) => _buildTransactionRow(i),
+            ),
+            const SizedBox(height: 48),
+            AppButton(
+              label: 'WITHDRAW FUNDS',
+              fullWidth: true,
+              onTap: () {},
+            ),
             const SizedBox(height: 20),
           ],
         ),
@@ -74,70 +54,101 @@ class WalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTransactionItem(int i) {
-    final titles = ['Note Taking Gig', 'Library Helper', 'Withdrawal', 'API Review'];
-    final dates = ['24 Apr', '22 Apr', '20 Apr', '18 Apr'];
+  Widget _buildBalanceCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(40),
+      decoration: BoxDecoration(
+        color: AppColors.black,
+        borderRadius: BorderRadius.circular(40),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.2),
+            blurRadius: 40,
+            offset: const Offset(0, 20),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'AVAILABLE BALANCE',
+            style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.white.withOpacity(0.5)),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '₹5,420.00',
+            style: AppTextStyles.displayLarge.copyWith(color: AppColors.white, fontSize: 44),
+          ),
+          const SizedBox(height: 32),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.trending_up_rounded, color: AppColors.white, size: 16),
+                const SizedBox(width: 8),
+                Text(
+                  '+12% THIS SEMESTER',
+                  style: AppTextStyles.labelBold.copyWith(fontSize: 9, color: AppColors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn().slideY(begin: 0.1, end: 0);
+  }
+
+  Widget _buildTransactionRow(int i) {
+    final titles = ['Note Taking Gig', 'Library Helper', 'Weekly Withdrawal', 'API Review'];
+    final dates = ['24 APR', '22 APR', '20 APR', '18 APR'];
     final amounts = ['+₹450', '+₹1,200', '-₹2,000', '+₹800'];
     final isNegative = i == 2;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 24.0),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(12),
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
-              shape: BoxShape.circle,
+              color: AppColors.offWhite,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.silver),
             ),
             child: Icon(
-              isNegative ? Icons.arrow_outward_rounded : Icons.south_west_rounded,
-              color: const Color(0xFFEDEAE6),
+              isNegative ? Icons.north_east_rounded : Icons.south_west_rounded,
               size: 20,
+              color: AppColors.black,
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(titles[i], style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
-                Text(dates[i], style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withOpacity(0.4))),
+                Text(titles[i], style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
+                const SizedBox(height: 4),
+                Text(dates[i], style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate)),
               ],
             ),
           ),
           Text(
             amounts[i],
-            style: GoogleFonts.inter(
+            style: AppTextStyles.headingMedium.copyWith(
               fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: isNegative ? Colors.redAccent : const Color(0xFFEDEAE6),
+              color: isNegative ? AppColors.slate : AppColors.black,
             ),
           ),
         ],
       ),
     ).animate().fadeIn(delay: (i * 100).ms);
-  }
-
-  Widget _buildWithdrawButton() {
-    return Container(
-      width: double.infinity,
-      height: 60,
-      decoration: BoxDecoration(
-        color: const Color(0xFFEDEAE6),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Center(
-        child: Text(
-          'WITHDRAW FUNDS',
-          style: GoogleFonts.outfit(
-            fontWeight: FontWeight.w900,
-            fontSize: 14,
-            color: Colors.black,
-            letterSpacing: 2,
-          ),
-        ),
-      ),
-    ).animate().scale(delay: 500.ms, curve: Curves.easeOutBack);
   }
 }

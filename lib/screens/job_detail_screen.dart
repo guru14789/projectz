@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/components.dart';
+import '../theme/app_theme.dart';
 
 class JobDetailScreen extends StatefulWidget {
   final VoidCallback onBack;
@@ -16,13 +17,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
 
   void _handleApply() async {
     setState(() => _isApplying = true);
-    
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 2));
-    
+    await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
     setState(() => _isApplying = false);
-    
     _showSuccessDialog();
   }
 
@@ -32,63 +29,39 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
         child: Container(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(40),
           decoration: BoxDecoration(
-            color: const Color(0xFF111111),
-            borderRadius: BorderRadius.circular(32),
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(color: AppColors.black, width: 2),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('✅', style: TextStyle(fontSize: 48)),
-              const SizedBox(height: 24),
+              const PandaLogo(size: 80),
+              const SizedBox(height: 32),
               Text(
                 'APPLICATION SENT',
-                style: GoogleFonts.outfit(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: const Color(0xFFEDEAE6),
-                  letterSpacing: 2,
-                ),
+                style: AppTextStyles.labelBold.copyWith(fontSize: 14, letterSpacing: 4),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
               Text(
-                'Suresh has been notified of your interest. Check your messages soon!',
+                'The company has been notified.\nYou will receive a response within 24 hours.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: const Color(0xFFEDEAE6).withOpacity(0.6),
-                ),
+                style: AppTextStyles.bodyMedium,
               ),
-              const SizedBox(height: 32),
-              GestureDetector(
+              const SizedBox(height: 40),
+              AppButton(
+                label: 'CONTINUE',
+                fullWidth: true,
                 onTap: () {
                   Navigator.pop(context);
                   widget.onBack();
                 },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEDEAE6),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'BACK TO HOME',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                        color: Colors.black,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
-        ).animate().scale(curve: Curves.easeOutBack, duration: 400.ms).fadeIn(),
+        ).animate().scale(curve: Curves.easeOutBack),
       ),
     );
   }
@@ -96,179 +69,129 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDEAE6),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFEDEAE6),
-        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: widget.onBack,
         ),
-        title: Text(
-          'GIG DETAILS',
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            color: Colors.black,
-            letterSpacing: 4,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 24),
-            _buildTag(),
-            const SizedBox(height: 16),
-            Text(
-              'Academic gig\n"Note Taking"',
-              style: GoogleFonts.outfit(
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                color: Colors.black,
-                height: 1.1,
-                letterSpacing: -1,
-              ),
-            ).animate().fadeIn().slideY(begin: 0.1, end: 0),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Text(
-                  '₹400 budget',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '·',
-                  style: TextStyle(color: Colors.black.withOpacity(0.2), fontSize: 20),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'IIT Madras',
-                  style: GoogleFonts.inter(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black.withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ).animate().fadeIn(delay: 200.ms),
-            const SizedBox(height: 48),
-            _buildSectionHeader('THE GIG'),
-            const SizedBox(height: 16),
-            Text(
-              'Looking for a student who attended the ML lecture today to share their notes. Handwritten or digital both are fine. High quality screenshots or PDFs preferred.',
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                color: Colors.black.withOpacity(0.7),
-                height: 1.6,
-              ),
-            ).animate().fadeIn(delay: 400.ms),
-            const SizedBox(height: 48),
-            _buildSectionHeader('POSTED BY'),
-            const SizedBox(height: 16),
-            _buildPosterCard(),
-            const SizedBox(height: 120),
-          ],
-        ),
-      ),
-      bottomNavigationBar: _buildBottomCTA(),
-    );
-  }
-
-  Widget _buildTag() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Text(
-        'ACADEMIC',
-        style: GoogleFonts.outfit(
-          fontSize: 10,
-          fontWeight: FontWeight.w900,
-          color: const Color(0xFFEDEAE6),
-          letterSpacing: 2,
-        ),
-      ),
-    ).animate().fadeIn().scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1));
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.outfit(
-        fontSize: 12,
-        fontWeight: FontWeight.w900,
-        color: Colors.black.withOpacity(0.3),
-        letterSpacing: 2,
-      ),
-    );
-  }
-
-  Widget _buildPosterCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black.withOpacity(0.05)),
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            backgroundColor: Color(0xFF111111),
-            child: Text('🐾', style: TextStyle(fontSize: 20)),
-          ),
+        title: Text('DETAILS', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
+        actions: [
+          IconButton(icon: const Icon(Icons.bookmark_border_rounded, size: 24), onPressed: () {}),
           const SizedBox(width: 16),
-          Expanded(
+        ],
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final double hPadding = constraints.maxWidth > 800 ? (constraints.maxWidth - 700) / 2 + 32 : 32;
+          
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: hPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Suresh Kumar',
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  '4.9 ratings · 12 gigs posted',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: Colors.black.withOpacity(0.4),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                const SizedBox(height: 32),
+                _buildHeader(),
+                const SizedBox(height: 48),
+                _buildInfoGrid(),
+                const SizedBox(height: 48),
+                _buildDetailSection('DESCRIPTION', 
+                  'We are seeking a detail-oriented student to curriculum curated academic resources. You will be responsible for synthesizing lecture materials into high-impact visual summaries for your department. Knowledge of Figma or equivalent tools is a plus.'),
+                const SizedBox(height: 48),
+                _buildDetailSection('REQUIREMENTS', 
+                  '• Currently enrolled in a 2nd year or above program\n• Excellent organizational skills\n• Strong command over analytical writing\n• Ability to meet fast-paced semester deadlines'),
+                const SizedBox(height: 120),
               ],
             ),
-          ),
-          const Icon(Icons.verified_rounded, color: Colors.blue, size: 20),
-        ],
+          );
+        }
       ),
-    ).animate().fadeIn(delay: 600.ms);
+      bottomNavigationBar: _buildActionPanel(),
+    );
   }
 
-  Widget _buildBottomCTA() {
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.black,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            'FEATURED GIG',
+            style: AppTextStyles.labelBold.copyWith(color: AppColors.white, fontSize: 10),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Editorial Synthesis\n& Research',
+          style: AppTextStyles.displayLarge,
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'IIT MADRAS · CHENNAI',
+          style: AppTextStyles.labelBold.copyWith(color: AppColors.slate, fontSize: 11),
+        ),
+      ],
+    ).animate().fadeIn().slideY(begin: 0.1, end: 0);
+  }
+
+  Widget _buildInfoGrid() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
-        color: const Color(0xFFEDEAE6),
-        border: Border(top: BorderSide(color: Colors.black.withOpacity(0.05))),
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: AppColors.silver),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _infoItem('BUDGET', '₹800/hr'),
+          _infoItem('DURATION', '2 WEEKS'),
+          _infoItem('APPLICANTS', '14'),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoItem(String label, String value) {
+    return Column(
+      children: [
+        Text(label, style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate)),
+        const SizedBox(height: 8),
+        Text(value, style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
+      ],
+    );
+  }
+
+  Widget _buildDetailSection(String title, String content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: AppTextStyles.labelBold.copyWith(fontSize: 12)),
+        const SizedBox(height: 16),
+        Text(content, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.charcoal)),
+      ],
+    );
+  }
+
+  Widget _buildActionPanel() {
+    return Container(
+      color: AppColors.white,
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(color: AppColors.black.withOpacity(0.05))),
       ),
       child: AppButton(
-        label: 'APPLY NOW',
+        label: 'APPLY FOR THIS GIG',
         fullWidth: true,
-        onTap: () {},
+        loading: _isApplying,
+        onTap: _handleApply,
       ),
-    ).animate().slideY(begin: 1, end: 0, duration: 400.ms);
+    );
   }
 }

@@ -12,142 +12,162 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF111111), // Midnight Black
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  _buildSearchSection(),
-                  const SizedBox(height: 40),
-                  _buildSectionHeader('FEATURED GIGS'),
-                  const SizedBox(height: 20),
-                  _buildFeaturedCarousel(),
-                  const SizedBox(height: 40),
-                  _buildSectionHeader('CATEGORIES'),
-                  const SizedBox(height: 20),
-                  _buildCategoryGrid(),
-                  const SizedBox(height: 40),
-                  _buildSectionHeader('LIVE JOB FEED'),
-                  const SizedBox(height: 16),
-                ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bool isLarge = constraints.maxWidth > 900;
+        final double hPadding = isLarge ? (constraints.maxWidth - 900) / 2 + 40 : 24;
+
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          body: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildAppBar(hPadding),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      _buildWelcomeText(),
+                      const SizedBox(height: 32),
+                      _buildSearchField(),
+                      const SizedBox(height: 48),
+                      _buildSectionHeader('CURATED OPPORTUNITIES'),
+                      const SizedBox(height: 24),
+                      _buildFeaturedList(constraints.maxWidth),
+                      const SizedBox(height: 48),
+                      _buildSectionHeader('INDUSTRIES'),
+                      const SizedBox(height: 24),
+                      _buildCategoryChips(),
+                      const SizedBox(height: 48),
+                      _buildSectionHeader('ACTIVE FEED'),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: hPadding),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    JobListCard(title: 'Library Curator', budget: '₹450/hr', emoji: '📚', college: 'Anna University', onTap: onJobTap),
+                    JobListCard(title: 'Panda Researcher', budget: '₹1.2k', emoji: '🐼', college: 'MU Campus', onTap: onJobTap),
+                    JobListCard(title: 'Draft Assistant', budget: '₹800', emoji: '🖋️', college: 'IIT Madras', onTap: onJobTap),
+                    JobListCard(title: 'Lab Assistant', budget: '₹500', emoji: '🧪', college: 'Sathyabama', onTap: onJobTap),
+                    const SizedBox(height: 100),
+                  ]),
+                ),
+              ),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _buildJobCard('Library Curator', '₹450/hr', '📚', 'Anna University'),
-                _buildJobCard('Panda Researcher', '₹1.2k', '🐼', 'MU Campus'),
-                _buildJobCard('Draft Assistant', '₹800', '🖋️', 'IIT Madras'),
-                _buildJobCard('Lab Assistant', '₹500', '🧪', 'Sathyabama'),
-                const SizedBox(height: 100),
-              ]),
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: onPostTap,
-        backgroundColor: const Color(0xFFEDEAE6), // Ivory
-        child: const Icon(Icons.add_rounded, color: Colors.black, size: 30),
-      ).animate().scale(delay: 1.seconds, duration: 500.ms, curve: Curves.easeOutBack),
+        );
+      }
     );
   }
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(double hPadding) {
     return SliverAppBar(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: AppColors.white.withOpacity(0.9),
       floating: true,
       pinned: true,
-      expandedHeight: 80,
+      elevation: 0,
       centerTitle: false,
       title: Text(
         'WORKPANDA',
-        style: GoogleFonts.outfit(
-          fontSize: 16,
-          fontWeight: FontWeight.w900,
-          color: const Color(0xFFEDEAE6),
-          letterSpacing: 4,
-        ),
+        style: AppTextStyles.labelBold.copyWith(letterSpacing: 4),
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.only(right: 20.0),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: const Color(0xFFEDEAE6),
-            child: const Text('SK', style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.bold)),
+          padding: EdgeInsets.only(right: hPadding),
+          child: const CircleAvatar(
+            radius: 18,
+            backgroundColor: AppColors.black,
+            child: Text('SK', style: TextStyle(color: AppColors.white, fontSize: 10, fontWeight: FontWeight.bold)),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSearchSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1D1D1D),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: TextField(
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: 'What are you looking for?',
-          hintStyle: GoogleFonts.inter(color: Colors.white.withOpacity(0.4), fontSize: 14),
-          icon: const Icon(Icons.search, color: Colors.white, size: 20),
-          border: InputBorder.none,
+  Widget _buildWelcomeText() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Good Morning,',
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.slate),
         ),
-      ),
-    ).animate().fadeIn(duration: 600.ms).moveX(begin: -20, end: 0);
+        Text(
+          'FIND YOUR FOCUS',
+          style: AppTextStyles.displayLarge,
+        ),
+      ],
+    ).animate().fadeIn().slideX(begin: -0.1, end: 0);
   }
 
-  Widget _buildSectionHeader(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.outfit(
-        fontSize: 12,
-        fontWeight: FontWeight.w900,
-        color: const Color(0xFFEDEAE6).withOpacity(0.5),
-        letterSpacing: 2,
+  Widget _buildSearchField() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: AppColors.black.withOpacity(0.05)),
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search gigs, companies, roles...',
+          hintStyle: GoogleFonts.inter(color: AppColors.slate.withOpacity(0.4), fontSize: 14),
+          icon: const Icon(Icons.search, color: AppColors.black, size: 20),
+          border: InputBorder.none,
+        ),
       ),
     );
   }
 
-  Widget _buildFeaturedCarousel() {
+  Widget _buildSectionHeader(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(title, style: AppTextStyles.labelBold.copyWith(color: AppColors.slate, fontSize: 10)),
+        const Icon(Icons.arrow_right_alt, size: 20, color: AppColors.slate),
+      ],
+    );
+  }
+
+  Widget _buildFeaturedList(double screenWidth) {
     return SizedBox(
-      height: 220,
+      height: 240,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         clipBehavior: Clip.none,
         itemCount: 3,
-        separatorBuilder: (c, i) => const SizedBox(width: 16),
-        itemBuilder: (c, i) => _buildFeaturedCard(i),
+        separatorBuilder: (c, i) => const SizedBox(width: 20),
+        itemBuilder: (c, i) => _buildPremiumCard(i, screenWidth),
       ),
     );
   }
 
-  Widget _buildFeaturedCard(int index) {
-    final titles = ['GRAPHIC DESIGN', 'NOTE TAKING', 'DATA ENTRY'];
-    final emojies = ['🎨', '📝', '💻'];
-    final colors = [const Color(0xFFEDEAE6), const Color(0xFFD4E157), const Color(0xFF64B5F6)];
-
+  Widget _buildPremiumCard(int index, double screenWidth) {
+    final titles = ['UX DESIGN', 'ML RESEARCH', 'COPYWRITING'];
+    final emojies = ['✨', '🧬', '✍️'];
+    
     return Container(
-      width: 280,
+      width: screenWidth < 600 ? 300 : 400,
       decoration: BoxDecoration(
-        color: colors[index % colors.length],
-        borderRadius: BorderRadius.circular(32),
+        color: index % 2 == 0 ? AppColors.black : AppColors.white,
+        borderRadius: BorderRadius.circular(40),
+        border: index % 2 != 0 ? Border.all(color: AppColors.black, width: 1.5) : null,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.1),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+          )
+        ],
       ),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -155,105 +175,59 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(emojies[index % emojies.length], style: const TextStyle(fontSize: 32)),
-              const Icon(Icons.arrow_outward_rounded, color: Colors.black),
+              Icon(
+                Icons.arrow_outward_rounded, 
+                color: index % 2 == 0 ? AppColors.white : AppColors.black
+              ),
             ],
           ),
           const Spacer(),
           Text(
             titles[index % titles.length],
-            style: GoogleFonts.outfit(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-              height: 1.1,
+            style: AppTextStyles.headingLarge.copyWith(
+              color: index % 2 == 0 ? AppColors.white : AppColors.black,
+              letterSpacing: -1,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'High payout student gig available at Anna University.',
-            style: GoogleFonts.inter(fontSize: 12, color: Colors.black.withOpacity(0.6)),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: index % 2 == 0 ? AppColors.white.withOpacity(0.6) : AppColors.charcoal,
+              fontSize: 12
+            ),
           ),
         ],
       ),
-    ).animate().scale(delay: (index * 100).ms, duration: 400.ms);
+    ).animate().fadeIn(delay: (index * 200).ms).scale(begin: const Offset(0.95, 0.95));
   }
 
-  Widget _buildCategoryGrid() {
+  Widget _buildCategoryChips() {
     return Wrap(
       spacing: 12,
       runSpacing: 12,
       children: [
-        _categoryChip('Academic', Icons.school_outlined),
-        _categoryChip('Delivery', Icons.delivery_dining_outlined),
-        _categoryChip('Drafting', Icons.edit_note_outlined),
-        _categoryChip('Tech', Icons.code_off_outlined),
-        _categoryChip('Events', Icons.event_available_outlined),
+        _industryChip('Research'),
+        _industryChip('Creative'),
+        _industryChip('Tech'),
+        _industryChip('Writing'),
+        _industryChip('Logistics'),
       ],
     );
   }
 
-  Widget _categoryChip(String label, IconData icon) {
+  Widget _industryChip(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1D1D1D),
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: AppColors.black, width: 1),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: const Color(0xFFEDEAE6)),
-          const SizedBox(width: 8),
-          Text(label, style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFEDEAE6), fontWeight: FontWeight.w600)),
-        ],
+      child: Text(
+        label.toUpperCase(),
+        style: AppTextStyles.labelBold.copyWith(fontSize: 10),
       ),
-    ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.2, end: 0);
-  }
-
-  Widget _buildJobCard(String title, String budget, String emoji, String college) {
-    return GestureDetector(
-      onTap: onJobTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1D1D1D),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              decoration: BoxDecoration(
-                color: const Color(0xFF2D2D2D),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
-                  Text(college, style: GoogleFonts.inter(fontSize: 12, color: Colors.white.withOpacity(0.5))),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(budget, style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w900, color: const Color(0xFFEDEAE6))),
-                const SizedBox(height: 4),
-                const Icon(Icons.chevron_right, color: Colors.white30, size: 18),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ).animate().fadeIn().moveY(begin: 20, end: 0);
+    );
   }
 }

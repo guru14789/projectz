@@ -4,21 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   AppColors._();
 
+  // Pure Professional B&W Palette
   static const Color black = Color(0xFF000000);
+  static const Color pitchBlack = Color(0xFF111111);
   static const Color white = Color(0xFFFFFFFF);
-  static const Color grayBg = Color(0xFFF5F5F5);
-  static const Color grayBorder = Color(0xFFE5E5E5);
-
-  // High contrast sketch colors
-  static const Color accent = Color(0xFF000000);
-  static const Color subtle = Color(0xFF757575);
-
-  // New Editorial Palette
-  static const Color onyx = Color(0xFF1E2326);
-  static const Color ivory = Color(0xFFEDEAE6);
-  static const Color primary = Color(0xFF111111);
-  static const Color secondary = Color(0xFF6B6B6B);
-  static const Color softGreen = Color(0xFF6FAF7A);
+  static const Color offWhite = Color(0xFFF9F9F9);
+  static const Color silver = Color(0xFFE5E5E5);
+  static const Color charcoal = Color(0xFF2D2D2D);
+  static const Color slate = Color(0xFF6B6B6B);
 }
 
 class AppTextStyles {
@@ -29,33 +22,39 @@ class AppTextStyles {
     fontWeight: FontWeight.w900,
     color: AppColors.black,
     height: 1.1,
+    letterSpacing: -1.0,
   );
+  
   static final TextStyle headingLarge = GoogleFonts.outfit(
     fontSize: 28,
     fontWeight: FontWeight.w800,
     color: AppColors.black,
   );
+  
   static final TextStyle headingMedium = GoogleFonts.outfit(
-    fontSize: 20,
-    fontWeight: FontWeight.w800,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
     color: AppColors.black,
   );
+  
   static final TextStyle bodyLarge = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: AppColors.black,
-    height: 1.5,
+    height: 1.6,
   );
+  
   static final TextStyle bodyMedium = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: AppColors.subtle,
+    color: AppColors.charcoal,
   );
-  static final TextStyle labelBold = GoogleFonts.inter(
-    fontSize: 13,
-    fontWeight: FontWeight.w800,
+  
+  static final TextStyle labelBold = GoogleFonts.outfit(
+    fontSize: 12,
+    fontWeight: FontWeight.w900,
     color: AppColors.black,
-    letterSpacing: 0.5,
+    letterSpacing: 2.0,
   );
 }
 
@@ -63,19 +62,25 @@ ThemeData buildAppTheme() {
   return ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
-    scaffoldBackgroundColor: const Color(0xFFEDEAE6),
+    scaffoldBackgroundColor: AppColors.white,
     colorScheme: const ColorScheme.light(
-      primary: Color(0xFF111111),
-      onPrimary: Color(0xFFEDEAE6),
-      surface: Color(0xFFEDEAE6),
-      background: Color(0xFFEDEAE6),
+      primary: AppColors.black,
+      onPrimary: AppColors.white,
+      secondary: AppColors.charcoal,
+      surface: AppColors.white,
+      background: AppColors.white,
     ),
     fontFamily: GoogleFonts.outfit().fontFamily,
     appBarTheme: const AppBarTheme(
-      backgroundColor: Color(0xFFEDEAE6),
+      backgroundColor: AppColors.white,
       elevation: 0,
       centerTitle: false,
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: AppColors.black),
+      titleTextStyle: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.silver,
+      thickness: 1,
     ),
   );
 }

@@ -17,14 +17,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   String _selectedStyle = 'VOLUMINOUS GIGS';
   bool _showMore = false;
 
-  // Bamboo Green Accent
-  static const Color bambooGreen = Color(0xFF2E7D32); // Deep Bamboo Green
-  static const Color bambooLight = Color(0xFF81C784); // Light Bamboo Green
-
   final Map<String, Map<String, dynamic>> _styleData = {
     'VOLUMINOUS GIGS': {
       'icon': Icons.auto_awesome_outlined,
-      'desc': 'Student gigs for you. Projects throughout your semester will lighten things up for weightless portfolio growth.',
+      'desc': 'Curated student gigs for your vertical. Projects throughout your semester will lighten things up for effortless portfolio growth.',
     },
     'STREAK JOBS': {
       'icon': Icons.bolt_outlined,
@@ -51,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.black,
       body: PageView(
         controller: _pageController,
         onPageChanged: (i) => setState(() => _currentPage = i),
@@ -65,41 +61,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ─── SCREEN 1: WELCOME (BLACK, WHITE, GREEN) ───────────────────
+  // ─── SCREEN 1: WELCOME (HIGH-CONTRAST B&W) ─────────────────────
   Widget _buildWelcomeScreen() {
     return SingleChildScrollView(
       child: Center(
         child: Container(
           width: double.infinity,
           height: MediaQuery.of(context).size.height,
-          clipBehavior: Clip.antiAlias,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
+          color: AppColors.white,
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.55,
-                padding: const EdgeInsets.all(24.0),
+                height: MediaQuery.of(context).size.height * 0.5,
+                padding: const EdgeInsets.all(40.0),
                 child: Column(
                   children: [
-                    const SizedBox(height: 48),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: bambooGreen.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.search, size: 24, color: bambooGreen),
-                      ),
-                    ),
                     const Spacer(),
                     Hero(
                       tag: 'mascot',
-                      child: Image.asset('assets/images/download.gif', width: 260),
-                    ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+                      child: Image.asset('assets/images/download.gif', width: 280),
+                    ).animate().scale(duration: 800.ms, curve: Curves.easeOutBack),
                     const Spacer(),
                   ],
                 ),
@@ -109,7 +90,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.fromLTRB(40, 60, 40, 40),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF111111),
+                    color: AppColors.black,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(60),
                       topRight: Radius.circular(60),
@@ -117,55 +98,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   child: Column(
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'WELCOME, ',
-                              style: GoogleFonts.outfit(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'PANDA',
-                              style: GoogleFonts.outfit(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                                color: bambooLight,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ],
+                      Text(
+                        'WORKPANDA',
+                        style: GoogleFonts.outfit(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.slate,
+                          letterSpacing: 8,
                         ),
-                      ),
+                      ).animate().fadeIn(delay: 400.ms),
+                      const SizedBox(height: 24),
+                      Text(
+                        'THE STUDENT\nGIG ECONOMY',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.outfit(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.white,
+                          height: 1.1,
+                        ),
+                      ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.2, end: 0),
                       const SizedBox(height: 16),
                       Text(
-                        'WorkPanda is the final tip off\nwhether or not a student really\nknows themselves.',
+                        'Professional opportunities curated for\nthe modern student lifestyle.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: 16,
-                          color: Colors.white.withOpacity(0.5),
+                          color: AppColors.white.withOpacity(0.4),
                           height: 1.6,
                         ),
                       ),
                       const Spacer(),
                       GestureDetector(
                         onTap: () => _pageController.nextPage(
-                            duration: 500.ms, curve: Curves.ease),
+                            duration: 600.ms, curve: Curves.easeInOutExpo),
                         child: Container(
                           width: 80,
                           height: 80,
                           decoration: const BoxDecoration(
-                            color: bambooGreen,
+                            color: AppColors.white,
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(Icons.keyboard_arrow_right,
-                              size: 40, color: Colors.white),
+                              size: 40, color: AppColors.black),
                         ),
-                      ),
+                      ).animate().scale(delay: 1.seconds),
                       const SizedBox(height: 20),
                     ],
                   ),
@@ -173,87 +150,62 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ],
           ),
-        ).animate().fadeIn(),
+        ),
       ),
     );
   }
 
-  // ─── SCREEN 2: CHOOSE FLOW (GRID STYLE) ──────────────────────────
+  // ─── SCREEN 2: CHOOSE STYLE (EDITORIAL GRID) ───────────────────
   Widget _buildChooseScreen() {
     return Container(
-      color: const Color(0xFF111111),
+      color: AppColors.black,
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 60),
+          const SizedBox(height: 80),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.menu, color: bambooLight),
-              Row(
-                children: [
-                  const Icon(Icons.notifications_none, color: Colors.white),
-                  const SizedBox(width: 16),
-                  Icon(Icons.favorite, color: bambooLight.withOpacity(0.8)),
-                ],
+              const Icon(Icons.grid_view_rounded, color: AppColors.white, size: 28),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.white.withOpacity(0.2)),
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(child: Icon(Icons.close, color: AppColors.white, size: 20)),
               )
             ],
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 48),
           Text(
-            'CHOOSE\nWORK STYLE',
+            'DEFINE YOUR\nWORK STYLE',
             style: GoogleFonts.outfit(
               fontSize: 24,
               fontWeight: FontWeight.w900,
-              color: Colors.white,
+              color: AppColors.white,
               letterSpacing: 2,
             ),
           ),
           const SizedBox(height: 32),
           Expanded(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 60),
               physics: const BouncingScrollPhysics(),
-              child: Column(
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.85,
                 children: [
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 0.85,
-                    children: [
-                      _buildGridCard('VOLUMINOUS GIGS', Icons.auto_awesome_outlined),
-                      _buildGridCard('STREAK JOBS', Icons.bolt_outlined),
-                      _buildGridCard('BOUNCY PROJECTS', Icons.blur_on_outlined),
-                      _buildGridCard('LONG PIXIE', Icons.linear_scale_outlined),
-                      if (_showMore) ...[
-                        _buildGridCard('SOLO RUNS', Icons.person_outline),
-                        _buildGridCard('TEAM GIGS', Icons.group_outlined),
-                      ]
-                    ],
-                  ),
-                  const SizedBox(height: 32),
-                  if (!_showMore)
-                    GestureDetector(
-                      onTap: () => setState(() => _showMore = true),
-                      child: Column(
-                        children: [
-                          Text(
-                            'MORE',
-                            style: GoogleFonts.outfit(
-                              color: bambooLight,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                          const Icon(Icons.keyboard_arrow_down, color: bambooLight, size: 16),
-                        ],
-                      ).animate().fadeIn().moveY(begin: -10, end: 0),
-                    ),
-                  const SizedBox(height: 40),
+                  _buildGridCard('VOLUMINOUS\nGIGS', Icons.auto_awesome_outlined),
+                  _buildGridCard('STREAK\nJOBS', Icons.bolt_outlined),
+                  _buildGridCard('BOUNCY\nPROJECTS', Icons.blur_on_outlined),
+                  _buildGridCard('LONG\nPIXIE', Icons.linear_scale_outlined),
                 ],
               ),
             ),
@@ -264,80 +216,81 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildGridCard(String title, IconData icon) {
-    bool isSelected = _selectedStyle == title;
+    bool isSelected = _selectedStyle == title.replaceAll('\n', ' ');
     return GestureDetector(
       onTap: () {
-        setState(() => _selectedStyle = title);
-        _pageController.nextPage(duration: 500.ms, curve: Curves.ease);
+        setState(() => _selectedStyle = title.replaceAll('\n', ' '));
+        _pageController.nextPage(duration: 600.ms, curve: Curves.easeInOutExpo);
       },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: isSelected ? bambooLight : Colors.white,
+          color: isSelected ? AppColors.white : AppColors.charcoal,
           borderRadius: BorderRadius.circular(32),
-          border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
+          border: Border.all(color: AppColors.white.withOpacity(0.05)),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                title,
-                style: GoogleFonts.outfit(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    color: isSelected ? Colors.white : Colors.black,
-                    letterSpacing: 0.5),
-              ),
+            Text(
+              title,
+              style: GoogleFonts.outfit(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  color: isSelected ? AppColors.black : AppColors.white,
+                  letterSpacing: 1.5),
             ),
             const Spacer(),
-            Icon(icon, size: 64, color: isSelected ? Colors.white : Colors.black),
+            Center(
+              child: Icon(icon, size: 56, color: isSelected ? AppColors.black : AppColors.white),
+            ),
             const Spacer(),
           ],
         ),
       ),
-    ).animate().scale(delay: 100.ms, curve: Curves.easeOutBack);
+    ).animate().fadeIn(delay: 200.ms).scale(begin: const Offset(0.9, 0.9));
   }
 
-  // ─── SCREEN 3: DETAIL (DYNAMIC STYLE) ─────────────────────────
+  // ─── SCREEN 3: PROFESSIONAL DETAIL ─────────────────────────────
   Widget _buildDetailScreen() {
     final data = _styleData[_selectedStyle] ?? _styleData['VOLUMINOUS GIGS']!;
     return Container(
-      color: Colors.white,
+      color: AppColors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [
             Container(
+              height: MediaQuery.of(context).size.height * 0.45,
               padding: const EdgeInsets.only(bottom: 20),
               child: Column(
                 children: [
                   const SizedBox(height: 60),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: const Icon(Icons.keyboard_arrow_left, size: 32, color: bambooGreen),
-                        onPressed: () => _pageController.previousPage(
-                            duration: 500.ms, curve: Curves.ease),
-                      ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+                          onPressed: () => _pageController.previousPage(
+                              duration: 600.ms, curve: Curves.easeInOutExpo),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.share_outlined, size: 20),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40.0),
-                    child: Center(
-                      child: Image.asset('assets/images/download.gif', width: 280),
-                    ),
-                  ),
+                  const Spacer(),
+                  Image.asset('assets/images/download.gif', width: 260),
+                  const Spacer(),
                 ],
               ),
             ),
             Container(
               width: double.infinity,
-              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.6),
+              constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height * 0.55),
               padding: const EdgeInsets.fromLTRB(40, 60, 40, 80),
               decoration: const BoxDecoration(
-                color: Color(0xFF111111),
+                color: AppColors.black,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(60),
                   topRight: Radius.circular(60),
@@ -346,78 +299,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _selectedStyle.replaceAll(' ', '\n'),
-                        style: GoogleFonts.outfit(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          height: 1.1,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      const Icon(Icons.bookmark, color: bambooLight, size: 28),
-                    ],
-                  ),
+                  Text(
+                    _selectedStyle,
+                    style: GoogleFonts.outfit(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.white,
+                      height: 1.1,
+                      letterSpacing: -1,
+                    ),
+                  ).animate().fadeIn().slideX(begin: 0.1, end: 0),
                   const SizedBox(height: 16),
-                  Row(
-                    children: List.generate(
-                        5,
-                        (index) => Icon(Icons.star,
-                            size: 20,
-                            color: index < 4
-                                ? bambooLight
-                                : Colors.white.withOpacity(0.2))),
+                  Container(
+                    width: 40,
+                    height: 2,
+                    color: AppColors.white,
                   ),
                   const SizedBox(height: 32),
                   Text(
                     data['desc'],
                     style: GoogleFonts.inter(
                       fontSize: 16,
-                      color: Colors.white.withOpacity(0.5),
-                      height: 1.6,
+                      color: AppColors.white.withOpacity(0.5),
+                      height: 1.8,
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 60),
                   GestureDetector(
                     onTap: widget.onDone,
                     child: Container(
-                      height: 64,
+                      height: 72,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [bambooGreen, bambooLight],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(32),
-                        boxShadow: [
-                          BoxShadow(
-                            color: bambooGreen.withOpacity(0.3),
-                            blurRadius: 15,
-                            offset: const Offset(0, 5),
-                          )
-                        ],
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(100),
                       ),
                       child: Center(
                         child: Text(
-                          'GET STARTED',
+                          'ENTER WORKPANDA',
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.w900,
                             fontSize: 14,
-                            color: Colors.white,
-                            letterSpacing: 2,
+                            color: AppColors.black,
+                            letterSpacing: 3,
                           ),
                         ),
                       ),
                     ),
-                  ),
+                  ).animate().fadeIn(delay: 400.ms).scale(),
                 ],
               ),
-            ).animate().slideY(begin: 0.3, end: 0, duration: 500.ms),
+            ).animate().slideY(begin: 0.3, end: 0, duration: 600.ms, curve: Curves.easeOutQuart),
           ],
         ),
       ),

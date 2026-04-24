@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
+import '../theme/app_theme.dart';
 
 class PandaLoader extends StatefulWidget {
   final double size;
@@ -16,21 +17,11 @@ class _PandaLoaderState extends State<PandaLoader>
   late AnimationController _controller;
 
   final List<CardContent> _contents = [
-    CardContent(icon: Icons.face, label: "Panda Blink", color: Colors.black),
-    CardContent(
-        icon: Icons.sentiment_satisfied_alt,
-        label: "Panda Smile",
-        color: Color(0xFF4CAF50)),
-    CardContent(
-        icon: Icons.timer_outlined, label: "Tasks", color: Colors.black),
-    CardContent(
-        icon: Icons.checklist_rounded,
-        label: "Checklist",
-        color: Color(0xFF4CAF50)),
-    CardContent(
-        icon: Icons.dashboard_customize_outlined,
-        label: "UI Hints",
-        color: Colors.black),
+    CardContent(icon: Icons.auto_awesome_rounded, label: "Premium"),
+    CardContent(icon: Icons.bolt_rounded, label: "Speed"),
+    CardContent(icon: Icons.verified_user_outlined, label: "Trusted"),
+    CardContent(icon: Icons.grid_view_rounded, label: "Variety"),
+    CardContent(icon: Icons.style_outlined, label: "Editorial"),
   ];
 
   @override
@@ -38,7 +29,7 @@ class _PandaLoaderState extends State<PandaLoader>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2500),
+      duration: const Duration(milliseconds: 3000),
     )..repeat();
 
     _controller.addListener(() {
@@ -64,31 +55,31 @@ class _PandaLoaderState extends State<PandaLoader>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Background shadow/depth cards
+          // Background stacking effect
           for (int i = 2; i > 0; i--)
             Transform.translate(
-              offset: Offset(0, i * 4.0),
+              offset: Offset(0, i * 6.0),
               child: Transform.scale(
-                scale: 1.0 - (i * 0.05),
+                scale: 1.0 - (i * 0.08),
                 child: _buildCard(null, i),
               ),
             ),
 
-          // Flipping Card
+          // Main Flipping Card
           _buildFlippingCard(),
         ],
       )
           .animate(onPlay: (controller) => controller.repeat())
           .moveY(
               begin: 0,
-              end: -10,
-              duration: 1200.ms,
+              end: -12,
+              duration: 1500.ms,
               curve: Curves.easeInOutSine)
           .then()
           .moveY(
-              begin: -10,
+              begin: -12,
               end: 0,
-              duration: 1200.ms,
+              duration: 1500.ms,
               curve: Curves.easeInOutSine),
     );
   }
@@ -97,18 +88,16 @@ class _PandaLoaderState extends State<PandaLoader>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        // Calculate local progress within this card's flip cycle
         final double progress = (_controller.value * _contents.length) % 1.0;
-        final bool isFlipping =
-            progress > 0.7; // Start flipping at the end of the step
+        final bool isFlipping = progress > 0.8; 
 
         final double flipAngle = isFlipping
-            ? (progress - 0.7) / 0.3 * math.pi // Flip 180 degrees
+            ? (progress - 0.8) / 0.2 * math.pi 
             : 0.0;
 
         return Transform(
           transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.002) // Perspective
+            ..setEntry(3, 2, 0.001) 
             ..rotateX(-flipAngle),
           alignment: Alignment.center,
           child: _buildCard(_contents[_currentIndex % _contents.length], 0),
@@ -119,17 +108,17 @@ class _PandaLoaderState extends State<PandaLoader>
 
   Widget _buildCard(CardContent? content, int depth) {
     return Container(
-      width: widget.size * 0.8,
+      width: widget.size * 0.85,
       height: widget.size,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppColors.black, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05 + (depth * 0.02)),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.black.withOpacity(0.08 + (depth * 0.02)),
+            blurRadius: 20,
+            offset: Offset(0, 8 + (depth * 4)),
           ),
         ],
       ),
@@ -138,25 +127,17 @@ class _PandaLoaderState extends State<PandaLoader>
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(content.icon,
-                    size: widget.size * 0.4, color: content.color),
-                const SizedBox(height: 8),
+                Icon(content.icon, size: widget.size * 0.35, color: AppColors.black),
+                const SizedBox(height: 12),
                 Container(
                   width: widget.size * 0.4,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: content.color.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+                  height: 2,
+                  color: AppColors.black.withOpacity(0.1),
                 ),
-                const SizedBox(height: 4),
-                Container(
-                  width: widget.size * 0.25,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: content.color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
+                const SizedBox(height: 6),
+                Text(
+                  content.label.toUpperCase(),
+                  style: AppTextStyles.labelBold.copyWith(fontSize: 8, letterSpacing: 2),
                 ),
               ],
             ),
@@ -167,6 +148,5 @@ class _PandaLoaderState extends State<PandaLoader>
 class CardContent {
   final IconData icon;
   final String label;
-  final Color color;
-  CardContent({required this.icon, required this.label, required this.color});
+  CardContent({required this.icon, required this.label});
 }

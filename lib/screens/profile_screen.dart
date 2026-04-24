@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/app_theme.dart';
+import '../widgets/components.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback onSettings;
@@ -9,156 +11,155 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEDEAE6), // Ivory
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFEDEAE6),
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'PROFILE',
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            color: Colors.black,
-            letterSpacing: 4,
-          ),
-        ),
+        title: Text('PROFILE', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings_outlined, color: Colors.black),
+            icon: const Icon(Icons.settings_outlined, color: AppColors.black),
             onPressed: onSettings,
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Column(
           children: [
-            const SizedBox(height: 20),
-            _buildProfileHeader(),
-            const SizedBox(height: 48),
-            _buildStats(),
-            const SizedBox(height: 48),
-            _buildMenu(),
             const SizedBox(height: 40),
+            _buildProfileAvatar(),
+            const SizedBox(height: 48),
+            _buildProfessionalStats(),
+            const SizedBox(height: 56),
+            _buildProfileMenu(),
+            const SizedBox(height: 100),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileAvatar() {
     return Column(
       children: [
         Container(
-          width: 120,
-          height: 120,
+          width: 140,
+          height: 140,
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.black.withOpacity(0.05), width: 1),
+            border: Border.all(color: AppColors.black, width: 1.5),
           ),
           child: const CircleAvatar(
-            backgroundColor: Color(0xFF111111),
-            child: Text('🐾', style: TextStyle(fontSize: 48)),
+            backgroundColor: AppColors.black,
+            child: PandaLogo(size: 80),
           ),
-        ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+        ).animate().scale(duration: 800.ms, curve: Curves.easeOutBack),
         const SizedBox(height: 24),
         Text(
           'SURESH KUMAR',
-          style: GoogleFonts.outfit(
-            fontSize: 24,
-            fontWeight: FontWeight.w900,
-            color: Colors.black,
-            letterSpacing: 1,
-            height: 1,
-          ),
+          style: AppTextStyles.displayLarge.copyWith(fontSize: 24, letterSpacing: 1),
         ),
         const SizedBox(height: 8),
-        Text(
-          'ANNA UNIVERSITY · YEAR 3',
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: Colors.black.withOpacity(0.4),
-            letterSpacing: 1.5,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.offWhite,
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(color: AppColors.silver),
+          ),
+          child: Text(
+            'ANNA UNIVERSITY · YEAR 3',
+            style: AppTextStyles.labelBold.copyWith(fontSize: 9, color: AppColors.slate),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildStats() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.black.withOpacity(0.03)),
-      ),
+  Widget _buildProfessionalStats() {
+    return IntrinsicHeight(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _statItem('12', 'GIGS'),
-          _divider(),
-          _statItem('4.9', 'RATING'),
-          _divider(),
-          _statItem('₹15k', 'EARNED'),
+          _statTile('12', 'GIGS COMPLETED'),
+          const VerticalDivider(),
+          _statTile('4.9', 'RATING'),
+          const VerticalDivider(),
+          _statTile('₹15k', 'EST. REVENUE'),
         ],
       ),
-    ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: 400.ms);
   }
 
-  Widget _divider() => Container(width: 1, height: 30, color: Colors.black12);
-
-  Widget _statItem(String value, String label) {
+  Widget _statTile(String value, String label) {
     return Column(
       children: [
-        Text(value, style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.black)),
-        Text(label, style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.w800, color: Colors.black38, letterSpacing: 1)),
+        Text(value, style: AppTextStyles.headingLarge.copyWith(fontSize: 20)),
+        const SizedBox(height: 4),
+        Text(label, style: AppTextStyles.labelBold.copyWith(fontSize: 8, color: AppColors.slate)),
       ],
     );
   }
 
-  Widget _buildMenu() {
+  Widget _buildProfileMenu() {
     return Column(
       children: [
-        _menuItem('My Gigs', Icons.assignment_outlined),
-        _menuItem('Verification Status', Icons.verified_user_outlined),
-        _menuItem('Support & FAQs', Icons.help_outline_rounded),
-        _menuItem('Logout', Icons.logout_rounded, isDestructive: true),
+        _profileMenuItem('My Portfolio', Icons.grid_view_rounded),
+        _profileMenuItem('Verified Status', Icons.verified_user_outlined),
+        _profileMenuItem('Billing History', Icons.receipt_long_outlined),
+        _profileMenuItem('Support Center', Icons.help_outline_rounded),
+        const SizedBox(height: 16),
+        _profileMenuItem('LOGOUT', Icons.logout_rounded, isDestructive: true),
       ],
     );
   }
 
-  Widget _menuItem(String title, IconData icon, {bool isDestructive = false}) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 22, color: isDestructive ? Colors.redAccent : Colors.black),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: isDestructive ? Colors.redAccent : Colors.black,
+  Widget _profileMenuItem(String title, IconData icon, {bool isDestructive = false}) {
+    return GestureDetector(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: isDestructive ? Colors.red.withOpacity(0.1) : AppColors.black.withOpacity(0.05)
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.02),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon, 
+              size: 20, 
+              color: isDestructive ? Colors.red : AppColors.black
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Text(
+                title.toUpperCase(),
+                style: AppTextStyles.labelBold.copyWith(
+                  fontSize: 11,
+                  color: isDestructive ? Colors.red : AppColors.black,
+                  letterSpacing: 1.5,
+                ),
               ),
             ),
-          ),
-          Icon(Icons.chevron_right, size: 18, color: Colors.black.withOpacity(0.2)),
-        ],
+            Icon(
+              Icons.chevron_right_rounded, 
+              size: 16, 
+              color: isDestructive ? Colors.red.withOpacity(0.3) : AppColors.slate
+            ),
+          ],
+        ),
       ),
-    ).animate().fadeIn(delay: 500.ms).slideX(begin: 0.1, end: 0);
+    ).animate().fadeIn(delay: 600.ms).slideX(begin: 0.1, end: 0);
   }
 }

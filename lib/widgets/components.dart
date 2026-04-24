@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
-// ─── PANDA SKETCH LOGO ─────────────────────────────────────────
+// ─── PREMIUM BRAND LOGO ─────────────────────────────────────────
 class PandaLogo extends StatelessWidget {
   final double size;
   const PandaLogo({super.key, this.size = 50});
@@ -12,23 +13,19 @@ class PandaLogo extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      padding: EdgeInsets.all(size * 0.15),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        shape: BoxShape.circle,
-        border: Border.all(color: AppColors.black, width: 2),
-      ),
-      child: Center(child: Text('🐼', style: TextStyle(fontSize: size * 0.5))),
+      padding: EdgeInsets.all(size * 0.1),
+      child: Image.asset('assets/images/download.gif', width: size),
     );
   }
 }
 
-// ─── SKETCH BUTTON ──────────────────────────────────────────────
+// ─── EDITORIAL BUTTON ────────────────────────────────────────────
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onTap;
   final bool primary;
   final bool fullWidth;
+  final bool loading;
 
   const AppButton({
     super.key,
@@ -36,165 +33,171 @@ class AppButton extends StatelessWidget {
     this.onTap,
     this.primary = true,
     this.fullWidth = false,
+    this.loading = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: loading ? null : onTap,
       child: Container(
         width: fullWidth ? double.infinity : null,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         decoration: BoxDecoration(
-          color: primary ? const Color(0xFF111111) : const Color(0xFFEDEAE6),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.black, width: 1.5),
+          color: primary ? AppColors.black : AppColors.white,
+          borderRadius: BorderRadius.circular(100),
+          border: Border.all(
+            color: AppColors.black,
+            width: 1.5,
+          ),
+          boxShadow: primary 
+            ? [BoxShadow(color: AppColors.black.withOpacity(0.15), blurRadius: 20, offset: const Offset(0, 8))]
+            : null,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.outfit(
-                color: primary ? const Color(0xFFEDEAE6) : Colors.black,
-                fontWeight: FontWeight.w800,
-                fontSize: 14,
-                letterSpacing: 1.2,
+        child: Center(
+          child: loading 
+            ? const SizedBox(
+                width: 20, 
+                height: 20, 
+                child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2)
+              )
+            : Text(
+                label.toUpperCase(),
+                style: GoogleFonts.outfit(
+                  color: primary ? AppColors.white : AppColors.black,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 13,
+                  letterSpacing: 2.0,
+                ),
               ),
-            ),
-          ],
         ),
       ),
-    );
+    ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95));
   }
 }
 
-// ─── SKETCH CARD ────────────────────────────────────────────────
-class AppCard extends StatelessWidget {
-  final Widget child;
-  final double padding;
-  final bool outlined;
-
-  const AppCard({
-    super.key,
-    required this.child,
-    this.padding = 20,
-    this.outlined = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(padding),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEDEAE6),
-        borderRadius: BorderRadius.circular(24),
-        border: outlined ? Border.all(color: AppColors.black, width: 1.5) : null,
-      ),
-      child: child,
-    );
-  }
-}
-
-// ─── SKETCH INPUT ───────────────────────────────────────────────
+// ─── MINIMALIST INPUT ───────────────────────────────────────────
 class AppInput extends StatelessWidget {
   final String placeholder;
   final IconData? icon;
   final bool obscure;
+  final TextEditingController? controller;
 
   const AppInput({
     super.key,
     required this.placeholder,
     this.icon,
     this.obscure = false,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF9F8F6),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.black.withOpacity(0.1), width: 1),
-      ),
-      child: TextField(
-        obscureText: obscure,
-        style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600),
-        decoration: InputDecoration(
-          hintText: placeholder,
-          hintStyle: GoogleFonts.inter(color: Colors.black.withOpacity(0.3), fontSize: 14),
-          icon: icon != null
-              ? Icon(icon, color: Colors.black, size: 20)
-              : null,
-          border: InputBorder.none,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          placeholder.toUpperCase(),
+          style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
         ),
-      ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 0),
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: AppColors.silver, width: 1.5),
+            ),
+          ),
+          child: TextField(
+            controller: controller,
+            obscureText: obscure,
+            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.black),
+            decoration: InputDecoration(
+              hintText: 'Enter your ${placeholder.toLowerCase()}',
+              hintStyle: GoogleFonts.inter(color: AppColors.slate.withOpacity(0.3), fontSize: 16),
+              prefixIcon: icon != null ? Icon(icon, color: AppColors.black, size: 20) : null,
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-// ─── BOTTOM NAV ────────────────────────────────────────────────
+// ─── MODERN NAV ────────────────────────────────────────────────
 class AppBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  const AppBottomNav(
-      {super.key, required this.selectedIndex, required this.onTap});
+  const AppBottomNav({super.key, required this.selectedIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF111111),
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.05), width: 1)),
+        color: AppColors.white,
+        border: Border(top: BorderSide(color: AppColors.black.withOpacity(0.05), width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _navItem(0, Icons.home_filled),
-          _navItem(1, Icons.explore_outlined),
-          _navActionItem(2, Icons.add_rounded),
-          _navItem(3, Icons.account_balance_wallet_outlined),
-          _navItem(4, Icons.person_outline_rounded),
+          _navItem(0, Icons.grid_view_rounded, 'Home'),
+          _navItem(1, Icons.explore_outlined, 'Explore'),
+          _navActionItem(2),
+          _navItem(3, Icons.account_balance_wallet_outlined, 'Wallet'),
+          _navItem(4, Icons.person_outline_rounded, 'Profile'),
         ],
       ),
     );
   }
 
-  Widget _navItem(int i, IconData icon) {
+  Widget _navItem(int i, IconData icon, String label) {
     final active = i == selectedIndex;
     return GestureDetector(
       onTap: () => onTap(i),
       child: Container(
-        padding: const EdgeInsets.all(12),
-        child: Icon(
-          icon,
-          size: 26,
-          color: active ? const Color(0xFFEDEAE6) : const Color(0xFFEDEAE6).withOpacity(0.3),
+        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 26,
+              color: active ? AppColors.black : AppColors.black.withOpacity(0.3),
+            ),
+            const SizedBox(height: 4),
+            if (active)
+              Container(
+                width: 4,
+                height: 4,
+                decoration: const BoxDecoration(color: AppColors.black, shape: BoxShape.circle),
+              ).animate().scale(),
+          ],
         ),
       ),
     );
   }
 
-  Widget _navActionItem(int i, IconData icon) {
+  Widget _navActionItem(int i) {
     return GestureDetector(
       onTap: () => onTap(i),
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: const BoxDecoration(
-          color: Color(0xFFEDEAE6),
+          color: AppColors.black,
           shape: BoxShape.circle,
         ),
-        child: const Icon(Icons.add_rounded, color: Colors.black, size: 28),
+        child: const Icon(Icons.add_rounded, color: AppColors.white, size: 28),
       ),
-    );
+    ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(1, 1), end: const Offset(1.1, 1.1), duration: 2.seconds, curve: Curves.easeInOut);
   }
 }
 
-// ─── JOB CARD ──────────────────────────────────────────────────
+// ─── PREMIUM GIG CARD ───────────────────────────────────────────
 class JobListCard extends StatelessWidget {
   final String title;
   final String budget;
@@ -217,45 +220,40 @@ class JobListCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF1D1D1D),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(32),
+          border: Border.all(color: AppColors.black.withOpacity(0.08)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.02),
+              blurRadius: 30,
+              offset: const Offset(0, 10),
+            )
+          ],
         ),
         child: Row(
           children: [
             Container(
-              width: 54,
-              height: 54,
+              width: 60,
+              height: 60,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
+                color: AppColors.offWhite,
+                borderRadius: BorderRadius.circular(20),
               ),
-              child: Center(
-                  child: Text(emoji, style: const TextStyle(fontSize: 26))),
+              child: Center(child: Text(emoji, style: const TextStyle(fontSize: 28))),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.outfit(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
-                  ),
+                  Text(title, style: AppTextStyles.headingMedium.copyWith(fontSize: 18)),
                   const SizedBox(height: 4),
                   Text(
-                    college,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: const Color(0xFFEDEAE6).withOpacity(0.4),
-                      fontWeight: FontWeight.w600,
-                    ),
+                    college.toUpperCase(),
+                    style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
                   ),
                 ],
               ),
@@ -263,67 +261,14 @@ class JobListCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  '₹$budget',
-                  style: GoogleFonts.outfit(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                    color: const Color(0xFFEDEAE6),
-                  ),
-                ),
+                Text(budget, style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
                 const SizedBox(height: 4),
-                Icon(Icons.favorite_border, size: 18, color: Colors.white.withOpacity(0.3)),
+                const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.slate),
               ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-
-// ─── PRESSABLE ─────────────────────────────────────────────────
-class Pressable extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onTap;
-  const Pressable({super.key, required this.child, this.onTap});
-  @override
-  State<Pressable> createState() => _PressableState();
-}
-
-class _PressableState extends State<Pressable>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
-  late Animation<double> _opacity;
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 80));
-    _opacity = Tween(begin: 1.0, end: 0.75).animate(_ctrl);
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _ctrl.forward(),
-      onTapUp: (_) {
-        _ctrl.reverse();
-        widget.onTap?.call();
-      },
-      onTapCancel: () => _ctrl.reverse(),
-      child: AnimatedBuilder(
-        animation: _opacity,
-        builder: (ctx, child) => Opacity(opacity: _opacity.value, child: child),
-        child: widget.child,
-      ),
-    );
+    ).animate().fadeIn().slideX(begin: 0.1, end: 0);
   }
 }

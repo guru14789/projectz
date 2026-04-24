@@ -16,18 +16,18 @@ import 'screens/other_screens.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: const Color(0xFF111111),
+    systemNavigationBarColor: Color(0xFF111111),
     systemNavigationBarIconBrightness: Brightness.light,
   ));
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  runApp(WorkPandaApp());
+  // Removed orientation restriction to support tablet/desktop landscape modes
+  runApp(const WorkPandaApp());
 }
 
 class WorkPandaApp extends StatelessWidget {
-  WorkPandaApp({super.key});
+  const WorkPandaApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +43,7 @@ class WorkPandaApp extends StatelessWidget {
 enum AppFlow { splash, onboarding, auth, verification, main }
 
 class AppShell extends StatefulWidget {
-  AppShell({super.key});
+  const AppShell({super.key});
   @override
   State<AppShell> createState() => _AppShellState();
 }
@@ -56,7 +56,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 400),
       transitionBuilder: (child, anim) =>
           FadeTransition(opacity: anim, child: child),
       child: _buildFlow(),
@@ -67,20 +67,20 @@ class _AppShellState extends State<AppShell> {
     switch (_flow) {
       case AppFlow.splash:
         return SplashScreen(
-            key: ValueKey('splash'),
+            key: const ValueKey('splash'),
             onDone: () => _setFlow(AppFlow.onboarding));
       case AppFlow.onboarding:
         return OnboardingScreen(
-            key: ValueKey('onboard'), onDone: () => _setFlow(AppFlow.auth));
+            key: const ValueKey('onboard'), onDone: () => _setFlow(AppFlow.auth));
       case AppFlow.auth:
         return AuthScreen(
-            key: ValueKey('auth'),
+            key: const ValueKey('auth'),
             onDone: () => _setFlow(AppFlow.verification));
       case AppFlow.verification:
         return VerificationScreen(
-            key: ValueKey('verify'), onDone: () => _setFlow(AppFlow.main));
+            key: const ValueKey('verify'), onDone: () => _setFlow(AppFlow.main));
       case AppFlow.main:
-        return MainNav(key: ValueKey('main'));
+        return MainNav(key: const ValueKey('main'));
     }
   }
 }
@@ -89,7 +89,7 @@ class _AppShellState extends State<AppShell> {
 enum MainScreen { home, discover, wallet, profile }
 
 class MainNav extends StatefulWidget {
-  MainNav({super.key});
+  const MainNav({super.key});
   @override
   State<MainNav> createState() => _MainNavState();
 }
@@ -120,7 +120,7 @@ class _MainNavState extends State<MainNav> {
       setState(() => _showPostJob = true);
       return;
     }
-    final screens = [
+    const screens = [
       MainScreen.home,
       MainScreen.discover,
       MainScreen.home,
@@ -168,13 +168,23 @@ class _MainNavState extends State<MainNav> {
     // Main nav
     return Scaffold(
       backgroundColor: AppColors.black,
-      body: AnimatedSwitcher(
-        duration: Duration(milliseconds: 250),
-        child: _buildScreen(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200), // Max width for extreme wide screens (desktop)
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: _buildScreen(),
+          ),
+        ),
       ),
-      bottomNavigationBar: AppBottomNav(
-        selectedIndex: _navIndex,
-        onTap: _onNavTap,
+      bottomNavigationBar: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: AppBottomNav(
+            selectedIndex: _navIndex,
+            onTap: _onNavTap,
+          ),
+        ),
       ),
     );
   }
@@ -183,20 +193,20 @@ class _MainNavState extends State<MainNav> {
     switch (_tab) {
       case MainScreen.home:
         return HomeScreen(
-          key: ValueKey('home'),
+          key: const ValueKey('home'),
           onJobTap: () => setState(() => _showJobDetail = true),
           onPostTap: () => setState(() => _showPostJob = true),
         );
       case MainScreen.discover:
         return DiscoverScreen(
-          key: ValueKey('discover'),
+          key: const ValueKey('discover'),
           onJobTap: () => setState(() => _showJobDetail = true),
         );
       case MainScreen.wallet:
-        return WalletScreen(key: ValueKey('wallet'));
+        return WalletScreen(key: const ValueKey('wallet'));
       case MainScreen.profile:
         return ProfileScreen(
-          key: ValueKey('profile'),
+          key: const ValueKey('profile'),
           onSettings: () => setState(() => _showSettings = true),
         );
     }

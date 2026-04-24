@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/app_theme.dart';
 
 class DiscoverScreen extends StatelessWidget {
   final VoidCallback onJobTap;
@@ -9,39 +10,33 @@ class DiscoverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF111111),
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF111111),
-        elevation: 0,
-        leading: const Icon(Icons.arrow_back_ios_new, color: Color(0xFFEDEAE6), size: 20),
-        title: Text(
-          'DISCOVER',
-          style: GoogleFonts.outfit(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            color: const Color(0xFFEDEAE6),
-            letterSpacing: 4,
-          ),
-        ),
+        title: Text('DISCOVER', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.tune_rounded, color: Color(0xFFEDEAE6)),
+            icon: const Icon(Icons.filter_list_rounded, color: AppColors.black),
             onPressed: () {},
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            _buildSearchBar(),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: _buildSearchBar(),
+            ),
+            const SizedBox(height: 40),
             _buildCategories(),
-            const SizedBox(height: 40),
-            _buildGrid(),
-            const SizedBox(height: 40),
+            const SizedBox(height: 48),
+            _buildSectionHeader('TRENDING GIGS'),
+            const SizedBox(height: 24),
+            _buildMasonryGrid(),
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -50,78 +45,103 @@ class DiscoverScreen extends StatelessWidget {
 
   Widget _buildSearchBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        color: AppColors.offWhite,
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(color: AppColors.black.withOpacity(0.05)),
       ),
       child: TextField(
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: AppColors.black),
         decoration: InputDecoration(
           hintText: 'Search for campus gigs...',
-          hintStyle: GoogleFonts.inter(color: Colors.white.withOpacity(0.3), fontSize: 14),
-          icon: const Icon(Icons.search, color: Colors.white30, size: 20),
+          hintStyle: GoogleFonts.inter(color: AppColors.slate.withOpacity(0.3), fontSize: 16),
+          icon: const Icon(Icons.search, color: AppColors.black, size: 20),
           border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 16),
         ),
       ),
     ).animate().fadeIn().slideY(begin: 0.1, end: 0);
   }
 
   Widget _buildCategories() {
-    final categories = ['All', 'Design', 'Code', 'Writing', 'Labs'];
+    final categories = ['ALL', 'DESIGN', 'CODE', 'WRITING', 'LABS'];
     return SizedBox(
-      height: 40,
+      height: 48,
       child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
         separatorBuilder: (c, i) => const SizedBox(width: 12),
         itemBuilder: (c, i) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
           decoration: BoxDecoration(
-            color: i == 0 ? const Color(0xFFEDEAE6) : Colors.transparent,
+            color: i == 0 ? AppColors.black : AppColors.white,
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(color: const Color(0xFFEDEAE6).withOpacity(0.3)),
+            border: Border.all(color: AppColors.black, width: 1),
           ),
-          child: Text(
-            categories[i],
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: i == 0 ? Colors.black : const Color(0xFFEDEAE6),
+          child: Center(
+            child: Text(
+              categories[i],
+              style: AppTextStyles.labelBold.copyWith(
+                fontSize: 10,
+                color: i == 0 ? AppColors.white : AppColors.black,
+              ),
             ),
           ),
         ),
       ),
-    ).animate().fadeIn(delay: 200.ms);
-  }
-
-  Widget _buildGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 0.8,
-      ),
-      itemCount: 4,
-      itemBuilder: (c, i) => _buildJobCard(i),
     );
   }
 
-  Widget _buildJobCard(int i) {
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Text(
+        title,
+        style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
+      ),
+    );
+  }
+
+  Widget _buildMasonryGrid() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 0.85,
+        ),
+        itemCount: 4,
+        itemBuilder: (c, i) => _buildDiscoveryCard(i),
+      ),
+    );
+  }
+
+  Widget _buildDiscoveryCard(int i) {
     final titles = ['UI Design', 'API Helper', 'Report Prep', 'Lab Assistant'];
-    final emojies = ['🎨', '⚙️', '📝', '🧪'];
+    final colleges = ['IIT Madras', 'Anna Univ', 'MU Campus', 'Sathyabama'];
+    final emojies = ['✨', '⚙️', '📝', '🧪'];
+
     return GestureDetector(
       onTap: onJobTap,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF1D1D1D),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          color: i % 3 == 0 ? AppColors.black : AppColors.white,
+          borderRadius: BorderRadius.circular(32),
+          border: i % 3 != 0 ? Border.all(color: AppColors.black.withOpacity(0.1)) : null,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.04),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            )
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,21 +150,22 @@ class DiscoverScreen extends StatelessWidget {
             const Spacer(),
             Text(
               titles[i],
-              style: GoogleFonts.outfit(
+              style: AppTextStyles.headingMedium.copyWith(
                 fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                height: 1.1,
+                color: i % 3 == 0 ? AppColors.white : AppColors.black,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Text(
-              '₹600/hr',
-              style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFEDEAE6).withOpacity(0.6)),
+              colleges[i].toUpperCase(),
+              style: AppTextStyles.labelBold.copyWith(
+                fontSize: 9, 
+                color: i % 3 == 0 ? AppColors.white.withOpacity(0.5) : AppColors.slate
+              ),
             ),
           ],
         ),
       ),
-    ).animate().fadeIn(delay: (i * 100).ms).scale(begin: const Offset(0.9, 0.9), end: const Offset(1, 1));
+    ).animate().fadeIn(delay: (i * 100).ms).scale(begin: const Offset(0.9, 0.9));
   }
 }
