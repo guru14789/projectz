@@ -12,6 +12,13 @@ class AppColors {
   // High contrast sketch colors
   static const Color accent  = Color(0xFF000000);
   static const Color subtle  = Color(0xFF757575);
+
+  // New Editorial Palette
+  static const Color onyx      = Color(0xFF1E2326);
+  static const Color ivory     = Color(0xFFEDEAE6);
+  static const Color primary   = Color(0xFF111111);
+  static const Color secondary = Color(0xFF6B6B6B);
+  static const Color softGreen = Color(0xFF6FAF7A);
 }
 
 class AppTextStyles {

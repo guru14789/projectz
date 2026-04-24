@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../widgets/panda_loader.dart';
 
 class SplashScreen extends StatefulWidget {
   final VoidCallback onDone;
@@ -13,7 +14,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), widget.onDone);
+    // Slightly longer delay for the beautiful animation
+    Future.delayed(const Duration(seconds: 4), widget.onDone);
   }
 
   @override
@@ -24,26 +26,22 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.black, width: 3),
+            const PandaLoader(size: 140),
+            const SizedBox(height: 60),
+            Image.asset(
+              'assets/images/logo.png',
+              width: 200,
+              errorBuilder: (ctx, _, __) => Text(
+                'WORKPANDA',
+                style: AppTextStyles.displayLarge.copyWith(letterSpacing: 2),
               ),
-              child: const Text('🐼', style: TextStyle(fontSize: 80)),
             ),
-            const SizedBox(height: 32),
-            Text(
-              'WORKPANDA',
-              style: AppTextStyles.displayLarge.copyWith(letterSpacing: 2),
-            ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             const Text(
               'GIGS FOR STUDENTS',
               style: TextStyle(
                 fontWeight: FontWeight.w900,
-                fontSize: 12,
+                fontSize: 10,
                 color: AppColors.black,
                 letterSpacing: 4,
               ),
