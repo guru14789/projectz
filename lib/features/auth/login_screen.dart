@@ -3,7 +3,7 @@ import '../../core/theme.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -19,21 +19,21 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               Text(
                 'Welcome Back',
                 style: Theme.of(context).textTheme.displayLarge,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Sign in to your account',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Email Field
               _buildLabel('Email Address'),
@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 prefixIcon: Icons.mail_outline,
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Password Field
               _buildLabel('Password'),
@@ -68,38 +68,38 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: Text('Forgot Password?'),
+                  child: const Text('Forgot Password?'),
                 ),
               ),
 
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
 
               ElevatedButton(
                 onPressed: () {
                   // Authentication logic
                 },
-                child: Text('Sign In'),
+                child: const Text('Sign In'),
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Don't have an account? "),
+                  const Text("Don't have an account? "),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                        MaterialPageRoute(builder: (context) => const SignupScreen()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign Up',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildLabel(String label) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
         style: TextStyle(
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
           prefixIcon: Icon(prefixIcon, color: AppTheme.textSecondary),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );

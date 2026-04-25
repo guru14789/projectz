@@ -89,15 +89,14 @@ class _PandaLoaderState extends State<PandaLoader>
       animation: _controller,
       builder: (context, child) {
         final double progress = (_controller.value * _contents.length) % 1.0;
-        final bool isFlipping = progress > 0.8; 
+        final bool isFlipping = progress > 0.8;
 
-        final double flipAngle = isFlipping
-            ? (progress - 0.8) / 0.2 * math.pi 
-            : 0.0;
+        final double flipAngle =
+            isFlipping ? (progress - 0.8) / 0.2 * math.pi : 0.0;
 
         return Transform(
           transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.001) 
+            ..setEntry(3, 2, 0.001)
             ..rotateX(-flipAngle),
           alignment: Alignment.center,
           child: _buildCard(_contents[_currentIndex % _contents.length], 0),
@@ -127,17 +126,19 @@ class _PandaLoaderState extends State<PandaLoader>
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(content.icon, size: widget.size * 0.35, color: AppColors.black),
+                Icon(content.icon,
+                    size: widget.size * 0.35, color: AppColors.black),
                 const SizedBox(height: 12),
                 Container(
                   width: widget.size * 0.4,
                   height: 2,
-                  color: AppColors.black.withOpacity(0.1),
+                  color: AppColors.black.withValues(alpha: 0.1),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   content.label.toUpperCase(),
-                  style: AppTextStyles.labelBold.copyWith(fontSize: 8, letterSpacing: 2),
+                  style: AppTextStyles.labelBold
+                      .copyWith(fontSize: 8, letterSpacing: 2),
                 ),
               ],
             ),

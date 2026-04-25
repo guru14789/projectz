@@ -24,32 +24,32 @@ class AppTextStyles {
     height: 1.1,
     letterSpacing: -1.0,
   );
-  
+
   static final TextStyle headingLarge = GoogleFonts.outfit(
     fontSize: 28,
     fontWeight: FontWeight.w800,
     color: AppColors.black,
   );
-  
+
   static final TextStyle headingMedium = GoogleFonts.outfit(
     fontSize: 22,
     fontWeight: FontWeight.w700,
     color: AppColors.black,
   );
-  
+
   static final TextStyle bodyLarge = GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w500,
     color: AppColors.black,
     height: 1.6,
   );
-  
+
   static final TextStyle bodyMedium = GoogleFonts.inter(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColors.charcoal,
   );
-  
+
   static final TextStyle labelBold = GoogleFonts.outfit(
     fontSize: 12,
     fontWeight: FontWeight.w900,
@@ -68,7 +68,6 @@ ThemeData buildAppTheme() {
       onPrimary: AppColors.white,
       secondary: AppColors.charcoal,
       surface: AppColors.white,
-      background: AppColors.white,
     ),
     fontFamily: GoogleFonts.outfit().fontFamily,
     appBarTheme: const AppBarTheme(
@@ -76,7 +75,8 @@ ThemeData buildAppTheme() {
       elevation: 0,
       centerTitle: false,
       iconTheme: IconThemeData(color: AppColors.black),
-      titleTextStyle: TextStyle(color: AppColors.black, fontWeight: FontWeight.bold),
+      titleTextStyle:
+          TextStyle(color: AppColors.black, fontWeight: FontWeight.bold),
     ),
     dividerTheme: const DividerThemeData(
       color: AppColors.silver,

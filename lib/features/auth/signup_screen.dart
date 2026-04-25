@@ -3,7 +3,7 @@ import '../../core/theme.dart';
 import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+  const SignupScreen({super.key});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -20,27 +20,27 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 padding: EdgeInsets.zero,
                 alignment: Alignment.centerLeft,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 'Create Account',
                 style: Theme.of(context).textTheme.displayLarge,
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Join the student marketplace',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               // Full Name Field
               _buildLabel('Full Name'),
@@ -51,7 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 keyboardType: TextInputType.name,
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Email Field
               _buildLabel('Email Address'),
@@ -62,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 prefixIcon: Icons.mail_outline,
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Password Field
               _buildLabel('Password'),
@@ -86,21 +86,21 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
 
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
 
               ElevatedButton(
                 onPressed: () {
                   // Sign up logic
                 },
-                child: Text('Create Account'),
+                child: const Text('Create Account'),
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Terms and Conditions
               Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
@@ -109,14 +109,14 @@ class _SignupScreenState extends State<SignupScreen> {
                           .bodyMedium
                           ?.copyWith(fontSize: 12),
                       children: [
-                        TextSpan(text: 'By signing up, you agree to our '),
+                        const TextSpan(text: 'By signing up, you agree to our '),
                         TextSpan(
                           text: 'Terms of Service',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppTheme.primary),
                         ),
-                        TextSpan(text: ' and '),
+                        const TextSpan(text: ' and '),
                         TextSpan(
                           text: 'Privacy Policy',
                           style: TextStyle(
@@ -129,20 +129,20 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
 
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already have an account? "),
+                  const Text("Already have an account? "),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign In',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
@@ -158,7 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Widget _buildLabel(String label) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         label,
         style: TextStyle(
@@ -191,7 +191,7 @@ class _SignupScreenState extends State<SignupScreen> {
           prefixIcon: Icon(prefixIcon, color: AppTheme.textSecondary),
           suffixIcon: suffixIcon,
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
       ),
     );

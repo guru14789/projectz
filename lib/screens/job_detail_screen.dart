@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../widgets/components.dart';
 import '../theme/app_theme.dart';
+import '../widgets/components.dart';
 
 class JobDetailScreen extends StatefulWidget {
+  final String title;
+  final String budget;
+  final String emoji;
+  final String college;
   final VoidCallback onBack;
-  const JobDetailScreen({super.key, required this.onBack});
+  final VoidCallback onCompanyTap;
+
+  const JobDetailScreen({
+    super.key,
+    required this.title,
+    required this.budget,
+    required this.emoji,
+    required this.college,
+    required this.onBack,
+    required this.onCompanyTap,
+  });
 
   @override
   State<JobDetailScreen> createState() => _JobDetailScreenState();
@@ -20,177 +34,296 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     await Future.delayed(const Duration(milliseconds: 1500));
     if (!mounted) return;
     setState(() => _isApplying = false);
-    _showSuccessDialog();
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(40),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: AppColors.black, width: 2),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const PandaLogo(size: 80),
-              const SizedBox(height: 32),
-              Text(
-                'APPLICATION SENT',
-                style: AppTextStyles.labelBold.copyWith(fontSize: 14, letterSpacing: 4),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'The company has been notified.\nYou will receive a response within 24 hours.',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium,
-              ),
-              const SizedBox(height: 40),
-              AppButton(
-                label: 'CONTINUE',
-                fullWidth: true,
-                onTap: () {
-                  Navigator.pop(context);
-                  widget.onBack();
-                },
-              ),
-            ],
-          ),
-        ).animate().scale(curve: Curves.easeOutBack),
+    
+    // Show success snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('APPLICATION SENT TO ${widget.college}', 
+          style: AppTextStyles.labelBold.copyWith(color: AppColors.white, fontSize: 10)),
+        backgroundColor: AppColors.black,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
+    widget.onBack();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          onPressed: widget.onBack,
-        ),
-        title: Text('DETAILS', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
-        actions: [
-          IconButton(icon: const Icon(Icons.bookmark_border_rounded, size: 24), onPressed: () {}),
-          const SizedBox(width: 16),
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final double hPadding = constraints.maxWidth > 800 ? (constraints.maxWidth - 700) / 2 + 32 : 32;
-          
-          return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: hPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 32),
-                _buildHeader(),
-                const SizedBox(height: 48),
-                _buildInfoGrid(),
-                const SizedBox(height: 48),
-                _buildDetailSection('DESCRIPTION', 
-                  'We are seeking a detail-oriented student to curriculum curated academic resources. You will be responsible for synthesizing lecture materials into high-impact visual summaries for your department. Knowledge of Figma or equivalent tools is a plus.'),
-                const SizedBox(height: 48),
-                _buildDetailSection('REQUIREMENTS', 
-                  '• Currently enrolled in a 2nd year or above program\n• Excellent organizational skills\n• Strong command over analytical writing\n• Ability to meet fast-paced semester deadlines'),
-                const SizedBox(height: 120),
-              ],
-            ),
-          );
-        }
-      ),
-      bottomNavigationBar: _buildActionPanel(),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.black,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            'FEATURED GIG',
-            style: AppTextStyles.labelBold.copyWith(color: AppColors.white, fontSize: 10),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Editorial Synthesis\n& Research',
-          style: AppTextStyles.displayLarge,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'IIT MADRAS · CHENNAI',
-          style: AppTextStyles.labelBold.copyWith(color: AppColors.slate, fontSize: 11),
-        ),
-      ],
-    ).animate().fadeIn().slideY(begin: 0.1, end: 0);
-  }
-
-  Widget _buildInfoGrid() {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: AppColors.offWhite,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: AppColors.silver),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: Stack(
         children: [
-          _infoItem('BUDGET', '₹800/hr'),
-          _infoItem('DURATION', '2 WEEKS'),
-          _infoItem('APPLICANTS', '14'),
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildSliverHeader(),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 40, 24, 120),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildTitleSection(),
+                      const SizedBox(height: 48),
+                      _buildDescriptionSection(),
+                      const SizedBox(height: 48),
+                      _buildRequirementsSection(),
+                      const SizedBox(height: 48),
+                      _buildCollegeInfo(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          _buildActionPanel(),
         ],
       ),
     );
   }
 
-  Widget _infoItem(String label, String value) {
+  Widget _buildSliverHeader() {
+    return SliverAppBar(
+      expandedHeight: 400,
+      backgroundColor: AppColors.black,
+      automaticallyImplyLeading: false,
+      pinned: true,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop',
+              fit: BoxFit.cover,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.black.withValues(alpha: 0.4),
+                    Colors.transparent,
+                    AppColors.white.withValues(alpha: 0.8),
+                    AppColors.white,
+                  ],
+                  stops: const [0.0, 0.4, 0.9, 1.0],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 40,
+              left: 24,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                    )
+                  ],
+                ),
+                child: Text(widget.emoji, style: const TextStyle(fontSize: 40)),
+              ).animate().scale(delay: 200.ms, duration: 600.ms, curve: Curves.easeOutBack),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitleSection() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate)),
-        const SizedBox(height: 8),
-        Text(value, style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                widget.title.toUpperCase(),
+                style: AppTextStyles.displayLarge.copyWith(
+                  fontSize: 32,
+                  height: 1.1,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.black,
+                borderRadius: BorderRadius.circular(100),
+              ),
+              child: Text(
+                widget.budget,
+                style: AppTextStyles.labelBold.copyWith(
+                  color: AppColors.white,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            const Icon(Icons.location_on_outlined, size: 14, color: AppColors.slate),
+            const SizedBox(width: 4),
+            Text(
+              widget.college.toUpperCase(),
+              style: AppTextStyles.labelBold.copyWith(
+                fontSize: 10,
+                color: AppColors.slate,
+                letterSpacing: 2,
+              ),
+            ),
+            const SizedBox(width: 16),
+            const Icon(Icons.access_time, size: 14, color: AppColors.slate),
+            const SizedBox(width: 4),
+            Text(
+              '2 DAYS AGO',
+              style: AppTextStyles.labelBold.copyWith(
+                fontSize: 10,
+                color: AppColors.slate,
+                letterSpacing: 2,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ).animate().fadeIn(duration: 800.ms).slideY(begin: 0.1, end: 0);
+  }
+
+  Widget _buildDescriptionSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('DESCRIPTION', style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate, letterSpacing: 3)),
+        const SizedBox(height: 16),
+        Text(
+          'We are looking for a dedicated student to assist with research and editorial synthesis for our upcoming journal publication. You will be responsible for summarizing findings, organizing citations, and ensuring the editorial flow matches academic standards.',
+          style: AppTextStyles.bodyLarge.copyWith(
+            color: AppColors.charcoal,
+            height: 1.8,
+            fontSize: 16,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildDetailSection(String title, String content) {
+  Widget _buildRequirementsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppTextStyles.labelBold.copyWith(fontSize: 12)),
-        const SizedBox(height: 16),
-        Text(content, style: AppTextStyles.bodyLarge.copyWith(color: AppColors.charcoal)),
+        Text('REQUIREMENTS', style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate, letterSpacing: 3)),
+        const SizedBox(height: 24),
+        _buildRequirementItem('Strong command over English literature'),
+        _buildRequirementItem('Previous experience in academic writing'),
+        _buildRequirementItem('Ability to work 10 hours per week'),
+        _buildRequirementItem('Currently enrolled at a recognized institution'),
       ],
+    );
+  }
+
+  Widget _buildRequirementItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 6),
+            child: Icon(Icons.circle, size: 6, color: AppColors.black),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.bodyMedium.copyWith(color: AppColors.charcoal),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCollegeInfo() {
+    return GestureDetector(
+      onTap: widget.onCompanyTap,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.offWhite,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: AppColors.silver.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: AppColors.black,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Center(
+                child: Text('IITM',
+                    style: TextStyle(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12)),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.college,
+                      style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
+                  Text('Verified Educational Institution',
+                      style: AppTextStyles.bodyMedium
+                          .copyWith(color: AppColors.slate, fontSize: 10)),
+                ],
+              ),
+            ),
+            const Icon(Icons.verified, color: Colors.blue, size: 20),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _buildActionPanel() {
-    return Container(
-      color: AppColors.white,
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
-      decoration: BoxDecoration(
-        border: Border(top: BorderSide(color: AppColors.black.withOpacity(0.05))),
-      ),
-      child: AppButton(
-        label: 'APPLY FOR THIS GIG',
-        fullWidth: true,
-        loading: _isApplying,
-        onTap: _handleApply,
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: ClipRRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
+            decoration: BoxDecoration(
+              color: AppColors.white.withValues(alpha: 0.8),
+              border: Border(top: BorderSide(color: AppColors.black.withValues(alpha: 0.05))),
+            ),
+            child: AppButton(
+              label: 'APPLY FOR THIS GIG',
+              fullWidth: true,
+              loading: _isApplying,
+              onTap: _handleApply,
+            ),
+          ),
+        ),
       ),
     );
   }

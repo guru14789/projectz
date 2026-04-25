@@ -3,18 +3,18 @@ import '../../core/theme.dart';
 import 'login_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
-  OnboardingScreen({super.key});
+  const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Spacer(),
+              const Spacer(),
               // Illustration area
               Stack(
                 alignment: Alignment.center,
@@ -27,7 +27,7 @@ class OnboardingScreen extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.black12),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: Text(
                         '🐼',
                         style: TextStyle(fontSize: 100),
@@ -47,10 +47,10 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 60),
+              const SizedBox(height: 60),
               // Text Area in a dark card
               Container(
-                padding: EdgeInsets.all(32),
+                padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
                   color: AppTheme.primary,
                   borderRadius: BorderRadius.circular(40),
@@ -65,33 +65,33 @@ class OnboardingScreen extends StatelessWidget {
                             fontSize: 28,
                           ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
                       'Finding Your Dream Job Is Now Much Easier And Faster Like Never Before.',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                           ),
                     ),
-                    SizedBox(height: 32),
+                    const SizedBox(height: 32),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
+                              builder: (context) => const LoginScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: AppTheme.primary,
                       ),
-                      child: Text('Lets Get Started'),
+                      child: const Text('Lets Get Started'),
                     ),
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),

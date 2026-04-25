@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/material.dart';import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
@@ -13,8 +12,12 @@ class PandaLogo extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      padding: EdgeInsets.all(size * 0.1),
-      child: Image.asset('assets/images/download.gif', width: size),
+      padding: EdgeInsets.all(size * 0.05),
+      child: Image.asset(
+        'assets/images/panda_logo.png',
+        width: size,
+        fit: BoxFit.contain,
+      ),
     );
   }
 }
@@ -40,7 +43,8 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: loading ? null : onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: 200.ms,
         width: fullWidth ? double.infinity : null,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         decoration: BoxDecoration(
@@ -50,29 +54,42 @@ class AppButton extends StatelessWidget {
             color: AppColors.black,
             width: 1.5,
           ),
-          boxShadow: primary 
-            ? [BoxShadow(color: AppColors.black.withOpacity(0.15), blurRadius: 20, offset: const Offset(0, 8))]
-            : null,
+          boxShadow: primary
+              ? [
+                  BoxShadow(
+                    color: AppColors.black.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  )
+                ]
+              : null,
         ),
         child: Center(
-          child: loading 
-            ? const SizedBox(
-                width: 20, 
-                height: 20, 
-                child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2)
-              )
-            : Text(
-                label.toUpperCase(),
-                style: GoogleFonts.outfit(
-                  color: primary ? AppColors.white : AppColors.black,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13,
-                  letterSpacing: 2.0,
+          child: loading
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    color: primary ? AppColors.white : AppColors.black,
+                    strokeWidth: 2,
+                  ),
+                )
+              : Text(
+                  label.toUpperCase(),
+                  style: GoogleFonts.outfit(
+                    color: primary ? AppColors.white : AppColors.black,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 13,
+                    letterSpacing: 2.0,
+                  ),
                 ),
-              ),
         ),
       ),
-    ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.95, 0.95));
+    ).animate(target: loading ? 0 : 1).scale(
+          begin: const Offset(0.95, 0.95),
+          end: const Offset(1, 1),
+          curve: Curves.easeOutBack,
+        );
   }
 }
 
@@ -98,7 +115,8 @@ class AppInput extends StatelessWidget {
       children: [
         Text(
           placeholder.toUpperCase(),
-          style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
+          style: AppTextStyles.labelBold
+              .copyWith(fontSize: 10, color: AppColors.slate),
         ),
         const SizedBox(height: 8),
         Container(
@@ -111,11 +129,17 @@ class AppInput extends StatelessWidget {
           child: TextField(
             controller: controller,
             obscureText: obscure,
-            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.black),
+            style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.black),
             decoration: InputDecoration(
               hintText: 'Enter your ${placeholder.toLowerCase()}',
-              hintStyle: GoogleFonts.inter(color: AppColors.slate.withOpacity(0.3), fontSize: 16),
-              prefixIcon: icon != null ? Icon(icon, color: AppColors.black, size: 20) : null,
+              hintStyle: GoogleFonts.inter(
+                  color: AppColors.slate.withValues(alpha: 0.3), fontSize: 16),
+              prefixIcon: icon != null
+                  ? Icon(icon, color: AppColors.black, size: 20)
+                  : null,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(vertical: 16),
             ),
@@ -130,26 +154,31 @@ class AppInput extends StatelessWidget {
 class AppBottomNav extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTap;
-  const AppBottomNav({super.key, required this.selectedIndex, required this.onTap});
+  const AppBottomNav(
+      {super.key, required this.selectedIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 90,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.black.withOpacity(0.05), width: 1)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _navItem(0, Icons.grid_view_rounded, 'Home'),
-          _navItem(1, Icons.explore_outlined, 'Explore'),
-          _navActionItem(2),
-          _navItem(3, Icons.account_balance_wallet_outlined, 'Wallet'),
-          _navItem(4, Icons.person_outline_rounded, 'Profile'),
-        ],
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          border: Border(
+              top: BorderSide(
+                  color: AppColors.black.withValues(alpha: 0.05), width: 1)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(child: _navItem(0, Icons.grid_view_rounded, 'Home')),
+            Expanded(child: _navItem(1, Icons.explore_outlined, 'Explore')),
+            _navActionItem(2),
+            Expanded(child: _navItem(3, Icons.account_balance_wallet_outlined, 'Wallet')),
+            Expanded(child: _navItem(4, Icons.person_outline_rounded, 'Profile')),
+          ],
+        ),
       ),
     );
   }
@@ -160,21 +189,23 @@ class AppBottomNav extends StatelessWidget {
       onTap: () => onTap(i),
       child: Container(
         color: Colors.transparent,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               icon,
               size: 26,
-              color: active ? AppColors.black : AppColors.black.withOpacity(0.3),
+              color:
+                  active ? AppColors.black : AppColors.black.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 4),
             if (active)
               Container(
                 width: 4,
                 height: 4,
-                decoration: const BoxDecoration(color: AppColors.black, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: AppColors.black, shape: BoxShape.circle),
               ).animate().scale(),
           ],
         ),
@@ -193,7 +224,11 @@ class AppBottomNav extends StatelessWidget {
         ),
         child: const Icon(Icons.add_rounded, color: AppColors.white, size: 28),
       ),
-    ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(begin: const Offset(1, 1), end: const Offset(1.1, 1.1), duration: 2.seconds, curve: Curves.easeInOut);
+    ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
+        begin: const Offset(1, 1),
+        end: const Offset(1.1, 1.1),
+        duration: 2.seconds,
+        curve: Curves.easeInOut);
   }
 }
 
@@ -224,10 +259,10 @@ class JobListCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: AppColors.black.withOpacity(0.08)),
+          border: Border.all(color: AppColors.black.withValues(alpha: 0.08)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.02),
+              color: AppColors.black.withValues(alpha: 0.02),
               blurRadius: 30,
               offset: const Offset(0, 10),
             )
@@ -242,18 +277,24 @@ class JobListCard extends StatelessWidget {
                 color: AppColors.offWhite,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Center(child: Text(emoji, style: const TextStyle(fontSize: 28))),
+              child: Center(
+                  child: Text(emoji, style: const TextStyle(fontSize: 28))),
             ),
             const SizedBox(width: 20),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: AppTextStyles.headingMedium.copyWith(fontSize: 18)),
+                  Text(title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          AppTextStyles.headingMedium.copyWith(fontSize: 18)),
                   const SizedBox(height: 4),
                   Text(
                     college.toUpperCase(),
-                    style: AppTextStyles.labelBold.copyWith(fontSize: 10, color: AppColors.slate),
+                    style: AppTextStyles.labelBold
+                        .copyWith(fontSize: 10, color: AppColors.slate),
                   ),
                 ],
               ),
@@ -261,9 +302,13 @@ class JobListCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(budget, style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
+                Text(budget,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.headingMedium.copyWith(fontSize: 16)),
                 const SizedBox(height: 4),
-                const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.slate),
+                const Icon(Icons.arrow_forward_ios_rounded,
+                    size: 14, color: AppColors.slate),
               ],
             ),
           ],

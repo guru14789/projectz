@@ -7,69 +7,94 @@ import '../theme/app_theme.dart';
 class HomeScreen extends StatelessWidget {
   final VoidCallback onJobTap;
   final VoidCallback onPostTap;
+  final VoidCallback onNotifications;
   const HomeScreen(
-      {super.key, required this.onJobTap, required this.onPostTap});
+      {super.key,
+      required this.onJobTap,
+      required this.onPostTap,
+      required this.onNotifications});
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final bool isLarge = constraints.maxWidth > 900;
-        final double hPadding = isLarge ? (constraints.maxWidth - 900) / 2 + 40 : 24;
+    return LayoutBuilder(builder: (context, constraints) {
+      final bool isLarge = constraints.maxWidth > 900;
+      final double hPadding =
+          isLarge ? (constraints.maxWidth - 900) / 2 + 40 : 24;
 
-        return Scaffold(
-          backgroundColor: AppColors.white,
-          body: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              _buildAppBar(hPadding),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: hPadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      _buildWelcomeText(),
-                      const SizedBox(height: 32),
-                      _buildSearchField(),
-                      const SizedBox(height: 48),
-                      _buildSectionHeader('CURATED OPPORTUNITIES'),
-                      const SizedBox(height: 24),
-                      _buildFeaturedList(constraints.maxWidth),
-                      const SizedBox(height: 48),
-                      _buildSectionHeader('INDUSTRIES'),
-                      const SizedBox(height: 24),
-                      _buildCategoryChips(),
-                      const SizedBox(height: 48),
-                      _buildSectionHeader('ACTIVE FEED'),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-              ),
-              SliverPadding(
+      return Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+        ),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            _buildAppBar(hPadding),
+            SliverToBoxAdapter(
+              child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: hPadding),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    JobListCard(title: 'Library Curator', budget: '₹450/hr', emoji: '📚', college: 'Anna University', onTap: onJobTap),
-                    JobListCard(title: 'Panda Researcher', budget: '₹1.2k', emoji: '🐼', college: 'MU Campus', onTap: onJobTap),
-                    JobListCard(title: 'Draft Assistant', budget: '₹800', emoji: '🖋️', college: 'IIT Madras', onTap: onJobTap),
-                    JobListCard(title: 'Lab Assistant', budget: '₹500', emoji: '🧪', college: 'Sathyabama', onTap: onJobTap),
-                    const SizedBox(height: 100),
-                  ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 24),
+                    _buildWelcomeText(),
+                    const SizedBox(height: 32),
+                    _buildSearchField(),
+                    const SizedBox(height: 48),
+                    _buildSectionHeader('CURATED OPPORTUNITIES'),
+                    const SizedBox(height: 24),
+                    _buildFeaturedList(constraints.maxWidth),
+                    const SizedBox(height: 48),
+                    _buildSectionHeader('INDUSTRIES'),
+                    const SizedBox(height: 24),
+                    _buildCategoryChips(),
+                    const SizedBox(height: 48),
+                    _buildSectionHeader('ACTIVE FEED'),
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-            ],
-          ),
-        );
-      }
-    );
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: hPadding),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  JobListCard(
+                      title: 'Library Curator',
+                      budget: '₹450/hr',
+                      emoji: '📚',
+                      college: 'Anna University',
+                      onTap: onJobTap),
+                  JobListCard(
+                      title: 'Panda Researcher',
+                      budget: '₹1.2k',
+                      emoji: '🐼',
+                      college: 'MU Campus',
+                      onTap: onJobTap),
+                  JobListCard(
+                      title: 'Draft Assistant',
+                      budget: '₹800',
+                      emoji: '🖋️',
+                      college: 'IIT Madras',
+                      onTap: onJobTap),
+                  JobListCard(
+                      title: 'Lab Assistant',
+                      budget: '₹500',
+                      emoji: '🧪',
+                      college: 'Sathyabama',
+                      onTap: onJobTap),
+                  const SizedBox(height: 100),
+                ]),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildAppBar(double hPadding) {
     return SliverAppBar(
-      backgroundColor: AppColors.white.withOpacity(0.9),
+      backgroundColor: AppColors.white.withValues(alpha: 0.9),
       floating: true,
       pinned: true,
       elevation: 0,
@@ -79,12 +104,21 @@ class HomeScreen extends StatelessWidget {
         style: AppTextStyles.labelBold.copyWith(letterSpacing: 4),
       ),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.notifications_none_rounded,
+              color: AppColors.black),
+          onPressed: onNotifications,
+        ),
         Padding(
           padding: EdgeInsets.only(right: hPadding),
           child: const CircleAvatar(
             radius: 18,
             backgroundColor: AppColors.black,
-            child: Text('SK', style: TextStyle(color: AppColors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+            child: Text('SK',
+                style: TextStyle(
+                    color: AppColors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold)),
           ),
         ),
       ],
@@ -113,12 +147,13 @@ class HomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.offWhite,
         borderRadius: BorderRadius.circular(100),
-        border: Border.all(color: AppColors.black.withOpacity(0.05)),
+        border: Border.all(color: AppColors.black.withValues(alpha: 0.05)),
       ),
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Search gigs, companies, roles...',
-          hintStyle: GoogleFonts.inter(color: AppColors.slate.withOpacity(0.4), fontSize: 14),
+          hintStyle: GoogleFonts.inter(
+              color: AppColors.slate.withValues(alpha: 0.4), fontSize: 14),
           icon: const Icon(Icons.search, color: AppColors.black, size: 20),
           border: InputBorder.none,
         ),
@@ -130,7 +165,9 @@ class HomeScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: AppTextStyles.labelBold.copyWith(color: AppColors.slate, fontSize: 10)),
+        Text(title,
+            style: AppTextStyles.labelBold
+                .copyWith(color: AppColors.slate, fontSize: 10)),
         const Icon(Icons.arrow_right_alt, size: 20, color: AppColors.slate),
       ],
     );
@@ -152,16 +189,18 @@ class HomeScreen extends StatelessWidget {
   Widget _buildPremiumCard(int index, double screenWidth) {
     final titles = ['UX DESIGN', 'ML RESEARCH', 'COPYWRITING'];
     final emojies = ['✨', '🧬', '✍️'];
-    
+
     return Container(
-      width: screenWidth < 600 ? 300 : 400,
+      width: screenWidth < 600 ? screenWidth * 0.8 : 400,
       decoration: BoxDecoration(
         color: index % 2 == 0 ? AppColors.black : AppColors.white,
         borderRadius: BorderRadius.circular(40),
-        border: index % 2 != 0 ? Border.all(color: AppColors.black, width: 1.5) : null,
+        border: index % 2 != 0
+            ? Border.all(color: AppColors.black, width: 1.5)
+            : null,
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.1),
+            color: AppColors.black.withValues(alpha: 0.1),
             blurRadius: 30,
             offset: const Offset(0, 15),
           )
@@ -174,16 +213,17 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(emojies[index % emojies.length], style: const TextStyle(fontSize: 32)),
-              Icon(
-                Icons.arrow_outward_rounded, 
-                color: index % 2 == 0 ? AppColors.white : AppColors.black
-              ),
+              Text(emojies[index % emojies.length],
+                  style: const TextStyle(fontSize: 32)),
+              Icon(Icons.arrow_outward_rounded,
+                  color: index % 2 == 0 ? AppColors.white : AppColors.black),
             ],
           ),
           const Spacer(),
           Text(
             titles[index % titles.length],
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.headingLarge.copyWith(
               color: index % 2 == 0 ? AppColors.white : AppColors.black,
               letterSpacing: -1,
@@ -192,14 +232,20 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'High payout student gig available at Anna University.',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: index % 2 == 0 ? AppColors.white.withOpacity(0.6) : AppColors.charcoal,
-              fontSize: 12
-            ),
+                color: index % 2 == 0
+                    ? AppColors.white.withValues(alpha: 0.6)
+                    : AppColors.charcoal,
+                fontSize: 12),
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (index * 200).ms).scale(begin: const Offset(0.95, 0.95));
+    )
+        .animate()
+        .fadeIn(delay: (index * 200).ms)
+        .scale(begin: const Offset(0.95, 0.95));
   }
 
   Widget _buildCategoryChips() {

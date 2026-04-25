@@ -1,40 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../widgets/components.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback onSettings;
-  const ProfileScreen({super.key, required this.onSettings});
+  final VoidCallback onActiveGigsTap;
+  final VoidCallback onPortfolioTap;
+  final VoidCallback onHelpTap;
+  const ProfileScreen({
+    super.key,
+    required this.onSettings,
+    required this.onActiveGigsTap,
+    required this.onPortfolioTap,
+    required this.onHelpTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        title: Text('PROFILE', style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
-        actions: [
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.white,
+      ),
+      child: LayoutBuilder(builder: (context, constraints) {
+        final double hPadding =
+            constraints.maxWidth > 800 ? (constraints.maxWidth - 700) / 2 : 32;
+
+        return Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: hPadding),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    _buildProfileAvatar(),
+                    const SizedBox(height: 48),
+                    _buildProfessionalStats(),
+                    const SizedBox(height: 56),
+                    _buildProfileMenu(),
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+      decoration: const BoxDecoration(
+        color: AppColors.white,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('PROFILE',
+              style: AppTextStyles.labelBold.copyWith(letterSpacing: 4)),
           IconButton(
             icon: const Icon(Icons.settings_outlined, color: AppColors.black),
             onPressed: onSettings,
           ),
-          const SizedBox(width: 8),
         ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 40),
-            _buildProfileAvatar(),
-            const SizedBox(height: 48),
-            _buildProfessionalStats(),
-            const SizedBox(height: 56),
-            _buildProfileMenu(),
-            const SizedBox(height: 100),
-          ],
-        ),
       ),
     );
   }
@@ -58,7 +90,8 @@ class ProfileScreen extends StatelessWidget {
         const SizedBox(height: 24),
         Text(
           'SURESH KUMAR',
-          style: AppTextStyles.displayLarge.copyWith(fontSize: 24, letterSpacing: 1),
+          style: AppTextStyles.displayLarge
+              .copyWith(fontSize: 24, letterSpacing: 1),
         ),
         const SizedBox(height: 8),
         Container(
@@ -70,7 +103,8 @@ class ProfileScreen extends StatelessWidget {
           ),
           child: Text(
             'ANNA UNIVERSITY · YEAR 3',
-            style: AppTextStyles.labelBold.copyWith(fontSize: 9, color: AppColors.slate),
+            style: AppTextStyles.labelBold
+                .copyWith(fontSize: 9, color: AppColors.slate),
           ),
         ),
       ],
@@ -82,11 +116,11 @@ class ProfileScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _statTile('12', 'GIGS COMPLETED'),
+          Expanded(child: _statTile('12', 'GIGS COMPLETED')),
           const VerticalDivider(),
-          _statTile('4.9', 'RATING'),
+          Expanded(child: _statTile('4.9', 'RATING')),
           const VerticalDivider(),
-          _statTile('₹15k', 'EST. REVENUE'),
+          Expanded(child: _statTile('₹15k', 'EST. REVENUE')),
         ],
       ),
     ).animate().fadeIn(delay: 400.ms);
@@ -97,7 +131,12 @@ class ProfileScreen extends StatelessWidget {
       children: [
         Text(value, style: AppTextStyles.headingLarge.copyWith(fontSize: 20)),
         const SizedBox(height: 4),
-        Text(label, style: AppTextStyles.labelBold.copyWith(fontSize: 8, color: AppColors.slate)),
+        Text(label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.labelBold
+                .copyWith(fontSize: 8, color: AppColors.slate)),
       ],
     );
   }
@@ -105,18 +144,23 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildProfileMenu() {
     return Column(
       children: [
-        _profileMenuItem('My Portfolio', Icons.grid_view_rounded),
+        _profileMenuItem('Portfolio Builder', Icons.auto_awesome_outlined,
+            onTap: onPortfolioTap),
+        _profileMenuItem('Active Gigs', Icons.timer_outlined,
+            onTap: onActiveGigsTap),
+        _profileMenuItem('Support Center', Icons.help_outline_rounded,
+            onTap: onHelpTap),
         _profileMenuItem('Verified Status', Icons.verified_user_outlined),
-        _profileMenuItem('Billing History', Icons.receipt_long_outlined),
-        _profileMenuItem('Support Center', Icons.help_outline_rounded),
         const SizedBox(height: 16),
         _profileMenuItem('LOGOUT', Icons.logout_rounded, isDestructive: true),
       ],
     );
   }
 
-  Widget _profileMenuItem(String title, IconData icon, {bool isDestructive = false}) {
+  Widget _profileMenuItem(String title, IconData icon,
+      {bool isDestructive = false, VoidCallback? onTap}) {
     return GestureDetector(
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(24),
@@ -124,11 +168,12 @@ class ProfileScreen extends StatelessWidget {
           color: AppColors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isDestructive ? Colors.red.withOpacity(0.1) : AppColors.black.withOpacity(0.05)
-          ),
+              color: isDestructive
+                  ? Colors.red.withValues(alpha: 0.1)
+                  : AppColors.black.withValues(alpha: 0.05)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.02),
+              color: AppColors.black.withValues(alpha: 0.02),
               blurRadius: 20,
               offset: const Offset(0, 10),
             )
@@ -136,11 +181,8 @@ class ProfileScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              icon, 
-              size: 20, 
-              color: isDestructive ? Colors.red : AppColors.black
-            ),
+            Icon(icon,
+                size: 20, color: isDestructive ? Colors.red : AppColors.black),
             const SizedBox(width: 20),
             Expanded(
               child: Text(
@@ -152,11 +194,11 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Icon(
-              Icons.chevron_right_rounded, 
-              size: 16, 
-              color: isDestructive ? Colors.red.withOpacity(0.3) : AppColors.slate
-            ),
+            Icon(Icons.chevron_right_rounded,
+                size: 16,
+                color: isDestructive
+                    ? Colors.red.withValues(alpha: 0.3)
+                    : AppColors.slate),
           ],
         ),
       ),

@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               height: 1,
               width: 40,
-              color: AppColors.black.withOpacity(0.1),
+              color: AppColors.black.withValues(alpha: 0.1),
             ).animate().scaleX(delay: 800.ms),
             const SizedBox(height: 16),
             Text(

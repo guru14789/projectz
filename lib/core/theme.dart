@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static Color primary = Color(0xFF000000);
-  static Color secondary = Color(0xFF3B82F6);
-  static Color background = Color(0xFFFFFFFF);
-  static Color surface = Color(0xFFF9FAFB);
-  static Color textPrimary = Color(0xFF000000);
-  static Color textSecondary = Color(0xFF6B7280);
-  static Color error = Color(0xFFEF4444);
-  static Color success = Color(0xFF10B981);
+  static Color primary = const Color(0xFF000000);
+  static Color secondary = const Color(0xFF3B82F6);
+  static Color background = const Color(0xFFFFFFFF);
+  static Color surface = const Color(0xFFF9FAFB);
+  static Color textPrimary = const Color(0xFF000000);
+  static Color textSecondary = const Color(0xFF6B7280);
+  static Color error = const Color(0xFFEF4444);
+  static Color success = const Color(0xFF10B981);
 
   static ThemeData get lightTheme {
     return ThemeData(
@@ -41,11 +40,11 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: primary,
           foregroundColor: Colors.white,
-          minimumSize: Size(double.infinity, 56),
+          minimumSize: const Size(double.infinity, 56),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          textStyle: TextStyle(
+          textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
